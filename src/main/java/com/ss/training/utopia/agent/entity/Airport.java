@@ -20,16 +20,16 @@ public class Airport implements Serializable {
 
 	@Id
     @Column(name="airportId")
-	private Integer airportId;
+	private Long airportId;
 	
     @Column(name="name")
     private String name;
 
-    public Integer getAirportId() {
+    public Long getAirportId() {
 		return airportId;
 	}
 
-	public void setAirportId(Integer airportId) {
+	public void setAirportId(Long airportId) {
 		this.airportId = airportId;
 	}
 
