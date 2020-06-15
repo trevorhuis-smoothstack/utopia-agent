@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 /**
  * @author Trevor Huis in 't Veld
  */
@@ -30,7 +29,7 @@ public class AgentController {
 		Booking[] bookingArray = null;
 		HttpStatus status = HttpStatus.OK;
 		bookingList = service.readAgentBookings(agentId);
-		if (bookingList == null) // no bookings exist in the database
+		if (bookingList.size() == 0) // no bookings exist in the database
 			status = HttpStatus.NO_CONTENT;
 		else
         bookingArray = bookingList.toArray(new Booking[bookingList.size()]);
