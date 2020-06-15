@@ -20,4 +20,6 @@ public interface FlightDAO extends JpaRepository<Flight, FlightPk> {
         value = "SELECT * FROM tbl_flight f WHERE f.seatsAvailable > 0 AND f.departTime <= CURRENT_TIMESTAMP", 
         nativeQuery = true)
     public List<Flight> findAvailable();
+
+    
 }
