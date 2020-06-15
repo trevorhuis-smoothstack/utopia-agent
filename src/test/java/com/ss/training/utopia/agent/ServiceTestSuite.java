@@ -33,7 +33,7 @@ public class ServiceTestSuite {
     
     
     @Test
-	public void cancelFlight() {
+	public void createBooking() {
         //Longs
         Long oneLong = (long) 1;
         Long twoLong = (long) 2;
@@ -44,22 +44,21 @@ public class ServiceTestSuite {
         Timestamp future = new Timestamp(now + HOUR);
 
         // Future flight and booking - Booker ID: 1, only cancellable flight by user 1
-        Flight futureFlight = new Flight(oneLong, twoLong, future, oneLong, null, null);
-        Booking cancellableBooking = new Booking(oneLong, oneLong, oneLong, true, null);
+        Flight flight = new Flight(oneLong, twoLong, future, oneLong, null, null);
+        Booking newBooking = new Booking(oneLong, oneLong, oneLong, true, null);
 
-        flightDAO.save(futureFlight);
-        bookingDao.save(cancellableBooking);
+        flightDAO.save(flight);
 
         List<Booking> foundBookings;
         foundBookings = bookingDao.findCancellable(oneLong);
         assertNotNull(foundBookings);
-		assertEquals(foundBookings.size(), 1);
+		assertEquals(foundBookings.size(), 0);
 
-        Booking cancelledBooking = service.cancelBooking(cancellableBooking);
-        assertEquals(cancelledBooking.getActive(), false);
+        service.createBooking(newBooking);
+
         foundBookings = bookingDao.findCancellable(oneLong);
         assertNotNull(foundBookings);
-		assertEquals(foundBookings.size(), 0);
-	}
+		assertEquals(foundBookings.size(), 1);
+    }
 
 }
