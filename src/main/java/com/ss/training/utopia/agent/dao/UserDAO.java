@@ -1,4 +1,4 @@
-package com.ss.training.utopia.dao;
+package com.ss.training.utopia.agent.dao;
 
 /**
  * @author Trevor Huis in 't Veld

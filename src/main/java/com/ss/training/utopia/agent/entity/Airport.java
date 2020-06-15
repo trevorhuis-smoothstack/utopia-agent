@@ -1,4 +1,4 @@
-package com.ss.training.utopia.entity;
+package com.ss.training.utopia.agent.entity;
 
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -10,7 +10,7 @@ import javax.persistence.Table;
  * @author Trevor Huis in 't Veld
  */
 @Entity
-@Table(name="tbl_aiport")
+@Table(name="tbl_airport")
 public class Airport implements Serializable {
     
     /**
@@ -20,26 +20,25 @@ public class Airport implements Serializable {
 
 	@Id
     @Column(name="airportId")
-    private Integer airportId;
+	private Long airportId;
+	
+    @Column(name="name")
+    private String name;
 
-    @Id
-    @Column(name="city")
-    private String city;
-
-    public Integer getAirportId() {
+    public Long getAirportId() {
 		return airportId;
 	}
 
-	public void setAirportId(Integer airportId) {
+	public void setAirportId(Long airportId) {
 		this.airportId = airportId;
 	}
 
-	public String getCity() {
-		return city;
+	public String getName() {
+		return name;
 	}
 
-	public void setCity(String city) {
-		this.city = city;
+	public void setName(String name) {
+		this.name = name;
     }
     
     
@@ -48,7 +47,7 @@ public class Airport implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((airportId == null) ? 0 : airportId.hashCode());
-		result = prime * result + ((city == null) ? 0 : city.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
 
@@ -66,10 +65,10 @@ public class Airport implements Serializable {
 				return false;
 		} else if (!airportId.equals(other.airportId))
 			return false;
-		if (city == null) {
-			if (other.city != null)
+		if (name == null) {
+			if (other.name != null)
 				return false;
-		} else if (!city.equals(other.city))
+		} else if (!name.equals(other.name))
 			return false;
 		return true;
 	}
