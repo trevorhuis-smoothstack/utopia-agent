@@ -12,24 +12,5 @@ import com.ss.training.utopia.agent.entity.Airport;
  */
 @Component
 public class AgentService {
-    @Autowired
-    AirportDAO airportDAO;
 
-        /**
-     * 
-     * @param airportId
-     * @return
-     */
-    public Airport readAirport(Integer airportId) {
-        return airportDAO.findByAirportId(airportId);
-    }
-
-    /**
-     * 
-     * @return
-     */
-    public List<Airport> readAirports() {
-        List<Airport> airports = airportDAO.findAll();
-        return airports;
-    }
 }
