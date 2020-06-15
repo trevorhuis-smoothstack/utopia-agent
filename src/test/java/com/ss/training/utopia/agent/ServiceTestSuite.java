@@ -56,6 +56,7 @@ public class ServiceTestSuite {
 		assertEquals(foundBookings.size(), 1);
 
         Booking cancelledBooking = service.cancelBooking(cancellableBooking);
+        
         assertEquals(cancelledBooking.getActive(), false);
         foundBookings = bookingDao.findCancellable(oneLong);
         assertNotNull(foundBookings);
@@ -89,6 +90,11 @@ public class ServiceTestSuite {
         foundBookings = bookingDao.findCancellable(oneLong);
         assertNotNull(foundBookings);
 		assertEquals(foundBookings.size(), 1);
-	}
+    }
+    
+    @Test
+	public void readBookingsByAgent() {
+
+    }
 
 }
