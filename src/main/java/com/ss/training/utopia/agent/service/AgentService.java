@@ -35,13 +35,9 @@ public class AgentService {
         // HOW TO DO A STRIPE REFUND
         // Stripe.apiKey = "sk_test_4eC39HqLyjWDarjtT1zdp7dc";
 
-        // Map<String, Object> params = new HashMap<>();
-        //     params.put(
-        //     "charge",
-        //     "ch_1GuO552eZvKYlo2CEgo1O2iQ"
-        // );
-
-        // Refund refund = Refund.create(params);
+        // Refund refund = Refund.create(RefundCreateParams.builder()
+        //   .setPaymentIntent("pi_Aabcxyz01aDfoo")
+        //   .build());
 
         // Handle the Stripe request
 
@@ -51,4 +47,10 @@ public class AgentService {
 
         return booking;
     }
+
+    public void createBooking(Booking booking) {
+        bookingDAO.save(booking);
+    }
+
+
 }

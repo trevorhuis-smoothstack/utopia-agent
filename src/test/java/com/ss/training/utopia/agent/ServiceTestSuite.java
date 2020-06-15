@@ -33,7 +33,7 @@ public class ServiceTestSuite {
     
     
     @Test
-	public void cancelFlight() {
+	public void cancelBooking() {
         //Longs
         Long oneLong = (long) 1;
         Long twoLong = (long) 2;
@@ -60,6 +60,35 @@ public class ServiceTestSuite {
         foundBookings = bookingDao.findCancellable(oneLong);
         assertNotNull(foundBookings);
 		assertEquals(foundBookings.size(), 0);
+    }
+    
+    @Test
+	public void createBooking() {
+        //Longs
+        Long oneLong = (long) 1;
+        Long twoLong = (long) 2;
+
+        // Times
+        final Long HOUR = (long) 3_600_000;
+        Long now = Instant.now().toEpochMilli();
+        Timestamp future = new Timestamp(now + HOUR);
+
+        // Future flight and booking - Booker ID: 1, only cancellable flight by user 1
+        Flight flight = new Flight(oneLong, twoLong, future, oneLong, null, null);
+        Booking newBooking = new Booking(oneLong, oneLong, oneLong, true, null);
+
+        flightDAO.save(flight);
+
+        List<Booking> foundBookings;
+        foundBookings = bookingDao.findCancellable(oneLong);
+        assertNotNull(foundBookings);
+		assertEquals(foundBookings.size(), 0);
+
+        service.createBooking(newBooking);
+
+        foundBookings = bookingDao.findCancellable(oneLong);
+        assertNotNull(foundBookings);
+		assertEquals(foundBookings.size(), 1);
 	}
 
 }
