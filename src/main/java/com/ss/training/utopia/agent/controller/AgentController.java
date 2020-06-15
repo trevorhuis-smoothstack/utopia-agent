@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,5 +37,68 @@ public class AgentController {
         bookingArray = bookingList.toArray(new Booking[bookingList.size()]);
 		return new ResponseEntity<Booking[]>(bookingArray, status);
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	@PutMapping(path="/booking")
+	public ResponseEntity<Booking> cancelBooking(@RequestBody Booking booking) {
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		if(booking == null || booking.getTravelerId() == null || booking.getBookerId() == null || booking.getStripeId() == null)
+				return new ResponseEntity<Booking>(booking, HttpStatus.BAD_REQUEST);
+
+		service.cancelBooking(booking);
+		status = HttpStatus.OK;
+		
+		return new ResponseEntity<Booking>(booking, status);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
