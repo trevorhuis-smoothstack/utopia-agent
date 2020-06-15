@@ -21,5 +21,8 @@ public interface BookingDAO extends JpaRepository<Booking, BookingPk> {
     public List<Booking> findCancellable(Long agentId);
 
     List<Booking> findByTravelerIdAndFlightId(Long travelerId, Long flightId);
+    
+
+	List<Booking> findByBookerId(Long bookerId);
 
 }

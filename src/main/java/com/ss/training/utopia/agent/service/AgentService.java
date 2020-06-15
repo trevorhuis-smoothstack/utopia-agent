@@ -1,5 +1,6 @@
 package com.ss.training.utopia.agent.service;
 
+import java.util.List;
 import com.ss.training.utopia.agent.dao.BookingDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ public class AgentService {
 
     @Autowired
     BookingDAO bookingDAO;
-
 
         public void createBooking(Booking booking) {
         // HOW TO DO A STRIPE PURCHASE
@@ -42,5 +42,14 @@ public class AgentService {
         // Handle the Stripe request
 
         bookingDAO.save(booking);
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public List<Booking> readAgentBookings(Long bookerId ) {
+        List<Booking> bookings = bookingDAO.findByBookerId(bookerId);
+        return bookings;
     }
 }

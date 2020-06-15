@@ -1,4 +1,5 @@
 package com.ss.training.utopia.agent;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -24,13 +25,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 H2TestProfileJPAConfig.class})
 @ActiveProfiles("test")
 public class ServiceTestSuite {
+
+    @Autowired private FlightDAO flightDAO;
     
 	@Autowired private BookingDAO bookingDao;
-    
-    @Autowired private FlightDAO flightDAO;
 
     @Autowired private AgentService service;
-    
     
     @Test
 	public void createBooking() {
@@ -59,6 +59,28 @@ public class ServiceTestSuite {
         foundBookings = bookingDao.findCancellable(oneLong);
         assertNotNull(foundBookings);
 		assertEquals(foundBookings.size(), 1);
+    }
+
+	public void readBookingsByAgent() {
+        Booking bookingByAgent = new Booking((long) 1, (long) 1, (long) 1, true, null);
+        Booking bookingByAgent2 = new Booking((long) 2, (long) 1, (long) 1, true, null);
+        Booking bookingNotByAgent = new Booking((long) 3, (long) 1, (long) 2, true, null);
+
+        bookingDao.save(bookingByAgent);
+        bookingDao.save(bookingByAgent2);
+        bookingDao.save(bookingNotByAgent);
+
+        List<Booking> bookingsByAgent = service.readAgentBookings((long) 1);
+
+        assertEquals(bookingsByAgent.size(), 2);
+    }
+
+    @Test
+	public void readBookingsByAgentNoBookings() {
+
+        List<Booking> bookingsByAgent = service.readAgentBookings((long) 1);
+
+        assertEquals(bookingsByAgent.size(), 0);
     }
 
 }
