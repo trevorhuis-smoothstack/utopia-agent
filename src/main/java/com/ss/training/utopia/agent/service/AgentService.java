@@ -1,12 +1,27 @@
 package com.ss.training.utopia.agent.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import com.ss.training.utopia.agent.dao.BookingDAO;
+import com.ss.training.utopia.agent.dao.FlightDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.ss.training.utopia.agent.entity.Booking;
+import com.stripe.Stripe;
+import com.stripe.exception.APIConnectionException;
+import com.stripe.exception.APIException;
+import com.stripe.exception.AuthenticationException;
+import com.stripe.exception.CardException;
+import com.stripe.exception.InvalidRequestException;
+import com.stripe.exception.RateLimitException;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Charge;
+import com.stripe.model.Refund;
 
 /**
  * @author Trevor Huis in 't Veld
@@ -14,107 +29,129 @@ import com.ss.training.utopia.agent.entity.Booking;
 @Component
 public class AgentService {
 
+    @Value("${stripe.api.secret}")
+    private String stripeKey;
+
     @Autowired
     BookingDAO bookingDAO;
 
-        public void createBooking(Booking booking) {
-        // HOW TO DO A STRIPE PURCHASE
+    @Autowired FlightDAO flightDAO;
 
-        // STORE A STRIPE KEY
-        // Stripe.apiKey = "sk_test_4eC39HqLyjWDarjtT1zdp7dc";
+    /**
+     * 
+     * @param booking
+     * @return
+     */
+    public String createBooking(Booking booking) {
+        try {
+            Charge charge = stripePurchase(booking);
+            booking.setStripeId(charge.getId());
+            bookingDAO.save(booking);
+          } catch (CardException e) {
+            return "Card Declined";
+          } catch (RateLimitException e) {
+            return "Stripe Server Error";
+          } catch (AuthenticationException e) {
+            return "Stripe Server Error";
+          } catch (APIConnectionException e) {
+            return "Stripe Server Error";
+          } catch (StripeException e) {
+            return "Stripe Server Error";
+          } catch (Exception e) {
+            // Something else happened, completely unrelated to Stripe
+          }
 
-        // GET THE PRICE FROM FLIGHTS TABLE
-        // float price = flightDAO.getByFlightId().getPrice();
-
-        // CREATE A CHARGE OBJECT
-        // `source` is obtained with Stripe.js; see https://stripe.com/docs/payments/accept-a-payment-charges#web-create-token
-        // Map<String, Object> params = new HashMap<>();
-        // params.put("amount", 2000);
-        // params.put("currency", "usd");
-        // params.put("source", "tok_mastercard");
-        // params.put(
-        //   "description",
-        //   "My First Test Charge (created for API docs)"
-        // );
-
-        // Charge charge = Charge.create(params);
-
-        // Handle the Stripe request
-
-        bookingDAO.save(booking);
+        return "Charge Created";
     }
 
     /**
      * 
+     * @param booking
+     * @return
+     * @throws AuthenticationException
+     * @throws InvalidRequestException
+     * @throws APIConnectionException
+     * @throws CardException
+     * @throws APIException
+     */
+    public Charge stripePurchase(Booking booking) throws AuthenticationException, InvalidRequestException,
+    APIConnectionException, CardException, APIException {
+        
+        Integer flightPrice = (int) (flightDAO.findByFlightId(booking.getFlightId()).getPrice() * 100);
+
+        Stripe.apiKey = stripeKey;
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("amount", flightPrice);
+        params.put("currency", "usd");
+        params.put("source", booking.getStripeId());
+
+        Charge charge = Charge.create(params);
+        return charge;
+        }
+
+    /**
+     * 
+     * @param bookerId
      * @return
      */
-    public List<Booking> readAgentBookings(Long bookerId ) {
+    public List<Booking> readAgentBookings(Long bookerId) {
         List<Booking> bookings = bookingDAO.findByBookerId(bookerId);
         return bookings;
     }
 
+    /**
+     * 
+     * @param booking
+     * @return
+     */
+    public String cancelBooking(Booking booking) {
+
+        try {
+            stripeRefund(booking);
+            booking.setActive(false);
+            bookingDAO.save(booking);
+          } catch (RateLimitException e) {
+            return "Stripe Server Error";
+          } catch (InvalidRequestException e) {
+            return "Already Refunded";
+          } catch (AuthenticationException e) {
+            return "Stripe Server Error";
+          } catch (APIConnectionException e) {
+            return "Stripe Server Error";
+          } catch (StripeException e) {
+            return "Stripe Server Error";
+          } catch (Exception e) {
+            // Something else happened, completely unrelated to Stripe
+          }
+
+        return "Refund Processed";
+
+    }
 
 
+    /**
+     * 
+     * @param booking
+     * @return
+     * @throws AuthenticationException
+     * @throws InvalidRequestException
+     * @throws APIConnectionException
+     * @throws CardException
+     * @throws APIException
+     */
+    public Refund stripeRefund(Booking booking) throws AuthenticationException, InvalidRequestException,
+            APIConnectionException, CardException, APIException {
+        
+        Stripe.apiKey = stripeKey;
 
+		Map<String, Object> params = new HashMap<>();
+            params.put(
+            "charge",
+            booking.getStripeId()
+            );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public Booking cancelBooking(Booking booking) {
-        // HOW TO DO A STRIPE REFUND
-
-        // STORE A STRIPE KEY
-        // Stripe.apiKey = "sk_test_4eC39HqLyjWDarjtT1zdp7dc";
-
-        // GET THE PRICE FROM FLIGHTS TABLE
-        // float price = flightDAO.getByFlightId().getPrice();
-
-        // CREATE A REFUND OBJECT
-        // Refund refund = Refund.create(RefundCreateParams.builder()
-        //   .setPaymentIntent("pi_Aabcxyz01aDfoo")
-        //   .build());
-
-        // Handle the Stripe request
-
-        booking.setActive(false);
-
-        bookingDAO.save(booking);
-
-        return booking;
+        Refund refund = Refund.create(params);
+        return refund;
     }
 }

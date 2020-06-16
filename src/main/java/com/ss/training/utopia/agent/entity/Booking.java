@@ -100,4 +100,8 @@ public class Booking implements Serializable {
 		return true;
 	}
 
+	public void setStripeId(String stripeId) {
+		this.stripeId = stripeId;
+	}
+
 }

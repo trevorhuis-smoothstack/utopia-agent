@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FlightDAO extends JpaRepository<Flight, FlightPk> {
-
+    Flight findByFlightId(Long flightId);
 }

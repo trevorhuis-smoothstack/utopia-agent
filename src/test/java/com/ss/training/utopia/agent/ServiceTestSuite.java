@@ -30,8 +30,6 @@ public class ServiceTestSuite {
     
     @Autowired private BookingDAO bookingDao;
     
-    @Autowired private FlightDAO flightDAO;
-
     @Autowired private AgentService service;
     
     @Test
@@ -135,9 +133,12 @@ public class ServiceTestSuite {
         assertNotNull(foundBookings);
 		assertEquals(foundBookings.size(), 1);
 
-        Booking cancelledBooking = service.cancelBooking(cancellableBooking);
+        service.cancelBooking(cancellableBooking);
         
+        Booking cancelledBooking = bookingDao.findAll().get(0);
         assertEquals(cancelledBooking.getActive(), false);
+
+
         foundBookings = bookingDao.findCancellable(oneLong);
         assertNotNull(foundBookings);
 		assertEquals(foundBookings.size(), 0);

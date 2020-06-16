@@ -4,6 +4,11 @@ import java.util.List;
 
 import com.ss.training.utopia.agent.entity.Booking;
 import com.ss.training.utopia.agent.service.AgentService;
+import com.stripe.exception.APIConnectionException;
+import com.stripe.exception.APIException;
+import com.stripe.exception.AuthenticationException;
+import com.stripe.exception.CardException;
+import com.stripe.exception.InvalidRequestException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,31 +20,38 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 /**
  * @author Trevor Huis in 't Veld
  */
 @RestController
-@RequestMapping(path="/agent")
+@RequestMapping(path = "/agent")
 public class AgentController {
 
-    @Autowired
+	@Autowired
 	AgentService service;
 
-
-	@PostMapping(path="/bookings")
+	@PostMapping(path = "/bookings")
 	public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
-		if(booking == null || booking.getTravelerId() == null || booking.getBookerId() == null || booking.getStripeId() == null)
-				return new ResponseEntity<Booking>(booking, HttpStatus.BAD_REQUEST);
 
-		service.createBooking(booking);
-		status = HttpStatus.CREATED;
-		
+		String bookingResult = service.createBooking(booking);
+		switch (bookingResult) {
+			case("Card Declined"):
+				break;
+			case("Stripe Server Error"):
+				status = HttpStatus.INTERNAL_SERVER_ERROR;
+				break;
+			case("Charge Created"):
+				status = HttpStatus.CREATED;
+				break;
+		}
+
 		return new ResponseEntity<Booking>(booking, status);
 	}
 
-	@GetMapping(path="/bookings/{agentId}")
-    public ResponseEntity<Booking[]> getAllBookingsByAgent(@PathVariable long agentId) {
+	@GetMapping(path = "/bookings/{agentId}")
+	public ResponseEntity<Booking[]> getAllBookingsByAgent(@PathVariable long agentId) {
 		List<Booking> bookingList = null;
 		Booking[] bookingArray = null;
 		HttpStatus status = HttpStatus.OK;
@@ -47,57 +59,32 @@ public class AgentController {
 		if (bookingList.size() == 0) // no bookings exist in the database
 			status = HttpStatus.NO_CONTENT;
 		else
-        bookingArray = bookingList.toArray(new Booking[bookingList.size()]);
+			bookingArray = bookingList.toArray(new Booking[bookingList.size()]);
 		return new ResponseEntity<Booking[]>(bookingArray, status);
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	@GetMapping(path = "/stripe")
+	public void testStripe() throws AuthenticationException, InvalidRequestException, APIConnectionException,
+			CardException, APIException {
+		service.stripeRefund(null);
+	}
 
 
 	@PutMapping(path="/booking")
 	public ResponseEntity<Booking> cancelBooking(@RequestBody Booking booking) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
-		if(booking == null || booking.getTravelerId() == null || booking.getBookerId() == null || booking.getStripeId() == null)
-				return new ResponseEntity<Booking>(booking, HttpStatus.BAD_REQUEST);
 
-		service.cancelBooking(booking);
-		status = HttpStatus.OK;
+		String bookingResult = service.createBooking(booking);
+		switch (bookingResult) {
+			case("Already Refunded"):
+				break;
+			case("Stripe Server Error"):
+				status = HttpStatus.INTERNAL_SERVER_ERROR;
+				break;
+			case("Refund Processed"):
+				status = HttpStatus.OK;
+				break;
+		}
 		
 		return new ResponseEntity<Booking>(booking, status);
 	}
