@@ -26,7 +26,7 @@ public class AgentController {
 	AgentService service;
 
 
-	@PostMapping(path="/booking")
+	@PostMapping(path="/bookings")
 	public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		if(booking == null || booking.getTravelerId() == null || booking.getBookerId() == null || booking.getStripeId() == null)
