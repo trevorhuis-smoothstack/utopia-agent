@@ -28,7 +28,9 @@ public class ServiceTestSuite {
 
     @Autowired private FlightDAO flightDAO;
     
-	@Autowired private BookingDAO bookingDao;
+    @Autowired private BookingDAO bookingDao;
+    
+    @Autowired private FlightDAO flightDAO;
 
     @Autowired private AgentService service;
     
@@ -82,5 +84,75 @@ public class ServiceTestSuite {
 
         assertEquals(bookingsByAgent.size(), 0);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @Test
+	public void cancelBooking() {
+        //Longs
+        Long oneLong = (long) 1;
+        Long twoLong = (long) 2;
+
+        // Times
+        final Long HOUR = (long) 3_600_000;
+        Long now = Instant.now().toEpochMilli();
+        Timestamp future = new Timestamp(now + HOUR);
+
+        // Future flight and booking - Booker ID: 1, only cancellable flight by user 1
+        Flight futureFlight = new Flight(oneLong, twoLong, future, oneLong, null, null);
+        Booking cancellableBooking = new Booking(oneLong, oneLong, oneLong, true, null);
+
+        flightDAO.save(futureFlight);
+        bookingDao.save(cancellableBooking);
+
+        List<Booking> foundBookings;
+        foundBookings = bookingDao.findCancellable(oneLong);
+        assertNotNull(foundBookings);
+		assertEquals(foundBookings.size(), 1);
+
+        Booking cancelledBooking = service.cancelBooking(cancellableBooking);
+        
+        assertEquals(cancelledBooking.getActive(), false);
+        foundBookings = bookingDao.findCancellable(oneLong);
+        assertNotNull(foundBookings);
+		assertEquals(foundBookings.size(), 0);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
