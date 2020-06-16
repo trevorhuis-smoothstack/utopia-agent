@@ -18,8 +18,6 @@ import com.stripe.exception.APIException;
 import com.stripe.exception.AuthenticationException;
 import com.stripe.exception.CardException;
 import com.stripe.exception.InvalidRequestException;
-import com.stripe.exception.RateLimitException;
-import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import com.stripe.model.Refund;
 
@@ -49,16 +47,8 @@ public class AgentService {
             bookingDAO.save(booking);
           } catch (CardException e) {
             return "Card Declined";
-          } catch (RateLimitException e) {
-            return "Stripe Server Error";
-          } catch (AuthenticationException e) {
-            return "Stripe Server Error";
-          } catch (APIConnectionException e) {
-            return "Stripe Server Error";
-          } catch (StripeException e) {
-            return "Stripe Server Error";
           } catch (Exception e) {
-            // Something else happened, completely unrelated to Stripe
+            return "Internal Server Error";
           }
 
         return "Charge Created";
@@ -111,18 +101,10 @@ public class AgentService {
             stripeRefund(booking);
             booking.setActive(false);
             bookingDAO.save(booking);
-          } catch (RateLimitException e) {
-            return "Stripe Server Error";
-          } catch (InvalidRequestException e) {
+         } catch (InvalidRequestException e) {
             return "Already Refunded";
-          } catch (AuthenticationException e) {
-            return "Stripe Server Error";
-          } catch (APIConnectionException e) {
-            return "Stripe Server Error";
-          } catch (StripeException e) {
-            return "Stripe Server Error";
           } catch (Exception e) {
-            // Something else happened, completely unrelated to Stripe
+            return "Internal Server Error";
           }
 
         return "Refund Processed";

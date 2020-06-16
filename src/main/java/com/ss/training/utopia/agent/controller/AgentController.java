@@ -4,11 +4,6 @@ import java.util.List;
 
 import com.ss.training.utopia.agent.entity.Booking;
 import com.ss.training.utopia.agent.service.AgentService;
-import com.stripe.exception.APIConnectionException;
-import com.stripe.exception.APIException;
-import com.stripe.exception.AuthenticationException;
-import com.stripe.exception.CardException;
-import com.stripe.exception.InvalidRequestException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,7 +26,7 @@ public class AgentController {
 	@Autowired
 	AgentService service;
 
-	@PostMapping(path = "/bookings")
+	@PostMapping(path = "/booking")
 	public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 
@@ -39,7 +34,7 @@ public class AgentController {
 		switch (bookingResult) {
 			case("Card Declined"):
 				break;
-			case("Stripe Server Error"):
+			case("Internal Server Error"):
 				status = HttpStatus.INTERNAL_SERVER_ERROR;
 				break;
 			case("Charge Created"):
@@ -63,13 +58,6 @@ public class AgentController {
 		return new ResponseEntity<Booking[]>(bookingArray, status);
 	}
 
-	@GetMapping(path = "/stripe")
-	public void testStripe() throws AuthenticationException, InvalidRequestException, APIConnectionException,
-			CardException, APIException {
-		service.stripeRefund(null);
-	}
-
-
 	@PutMapping(path="/booking")
 	public ResponseEntity<Booking> cancelBooking(@RequestBody Booking booking) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -78,7 +66,7 @@ public class AgentController {
 		switch (bookingResult) {
 			case("Already Refunded"):
 				break;
-			case("Stripe Server Error"):
+			case("Internal Server Error"):
 				status = HttpStatus.INTERNAL_SERVER_ERROR;
 				break;
 			case("Refund Processed"):
