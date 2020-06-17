@@ -26,8 +26,13 @@ public class AgentService {
      * 
      * @return
      */
-    public List<Booking> readAgentBookings(Long bookerId ) {
-        return bookingDAO.findByBookerId(bookerId);
+    public List<Booking> readAgentBookings(Long bookerId) {
+        try {
+            List<Booking> bookings = bookingDAO.findByBookerId(bookerId);
+            return bookings;
+        } catch (Throwable t) {
+            return null;
+        }
     }
 
 
@@ -48,6 +53,12 @@ public class AgentService {
 
 
         public List<Flight> readAvailableFlights() {
-            return flightDAO.findAvailable();
+            
+            try {
+                List<Flight> flights = flightDAO.findAvailable();
+                return flights;
+            } catch (Throwable t) {
+                return null;
+            }
         }
 }
