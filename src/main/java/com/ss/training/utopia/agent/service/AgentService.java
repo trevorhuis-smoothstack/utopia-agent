@@ -10,8 +10,10 @@ import com.ss.training.utopia.agent.dao.FlightDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ss.training.utopia.agent.entity.Booking;
+import com.ss.training.utopia.agent.entity.Flight;
 import com.stripe.Stripe;
 import com.stripe.exception.APIConnectionException;
 import com.stripe.exception.APIException;
@@ -40,7 +42,18 @@ public class AgentService {
      * @param booking
      * @return
      */
+    @Transactional
     public String createBooking(Booking booking) {
+
+        Flight flight;
+		try {
+			flight = flightDAO.findByFlightId(booking.getFlightId());
+		} catch (Throwable t) {
+			return null;
+		}
+		if (flight.getSeatsAvailable() <= 0)
+            return "Flight Full";
+
         try {
             Charge charge = stripePurchase(booking);
             booking.setStripeId(charge.getId());
@@ -49,10 +62,13 @@ public class AgentService {
             return "Card Declined";
           } catch (Exception e) {
             return "Internal Server Error";
-          }
+            } catch (Throwable t) {
+                return "Internal Server Error";
+            }
 
         return "Charge Created";
     }
+
 
     /**
      * 
@@ -86,8 +102,12 @@ public class AgentService {
      * @return
      */
     public List<Booking> readAgentBookings(Long bookerId) {
-        List<Booking> bookings = bookingDAO.findByBookerId(bookerId);
-        return bookings;
+        try {
+            List<Booking> bookings = bookingDAO.findByBookerId(bookerId);
+            return bookings;
+        } catch (Throwable t) {
+            return null;
+        }
     }
 
     /**
@@ -101,14 +121,15 @@ public class AgentService {
             stripeRefund(booking);
             booking.setActive(false);
             bookingDAO.save(booking);
-         } catch (InvalidRequestException e) {
+        } catch (InvalidRequestException e) {
             return "Already Refunded";
-          } catch (Exception e) {
+        } catch (Exception e) {
             return "Internal Server Error";
-          }
+        } catch (Throwable t) {
+            return "Internal Server Error";
+        }
 
         return "Refund Processed";
-
     }
 
 

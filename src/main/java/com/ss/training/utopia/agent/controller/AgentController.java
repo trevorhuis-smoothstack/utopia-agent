@@ -34,6 +34,8 @@ public class AgentController {
 		switch (bookingResult) {
 			case("Card Declined"):
 				break;
+			case("Flight Full"):
+				status = HttpStatus.NO_CONTENT;
 			case("Internal Server Error"):
 				status = HttpStatus.INTERNAL_SERVER_ERROR;
 				break;
@@ -51,7 +53,9 @@ public class AgentController {
 		Booking[] bookingArray = null;
 		HttpStatus status = HttpStatus.OK;
 		bookingList = service.readAgentBookings(agentId);
-		if (bookingList.size() == 0) // no bookings exist in the database
+		if (bookingList == null)
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		else if (bookingList.size() == 0) // no bookings exist in the database
 			status = HttpStatus.NO_CONTENT;
 		else
 			bookingArray = bookingList.toArray(new Booking[bookingList.size()]);
@@ -71,6 +75,7 @@ public class AgentController {
 				break;
 			case("Refund Processed"):
 				status = HttpStatus.OK;
+				booking.setActive(false);
 				break;
 		}
 		

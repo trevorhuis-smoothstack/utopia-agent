@@ -1,6 +1,5 @@
 package com.ss.training.utopia.agent;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.sql.Timestamp;
