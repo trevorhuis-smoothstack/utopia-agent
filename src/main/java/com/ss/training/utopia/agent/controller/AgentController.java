@@ -76,17 +76,4 @@ public class AgentController {
 		
 		return new ResponseEntity<Booking>(booking, status);
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
