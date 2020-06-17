@@ -23,19 +23,7 @@ public class AgentController {
     @Autowired
 	AgentService service;
 
-    @GetMapping(path="/airport/{id}")
-    public ResponseEntity<Airport> getAirport(@PathVariable int id) {
-		Airport airport = null;
-		HttpStatus status = HttpStatus.OK;
-
-		airport = service.readAirport(id);
-		if (airport == null) // no author with the specified ID exists
-			status = HttpStatus.NOT_FOUND;
-
-		return new ResponseEntity<Airport>(airport, status);
-	}
-
-    @GetMapping(path="/airport")
+    @GetMapping(path="/airports")
     public ResponseEntity<Airport[]> getAllAirports() {
 		List<Airport> airportList = null;
 		Airport[] airportArray = null;
