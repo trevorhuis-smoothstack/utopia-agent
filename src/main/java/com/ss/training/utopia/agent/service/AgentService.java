@@ -35,23 +35,6 @@ public class AgentService {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         public List<Flight> readAvailableFlights() {
             
             try {
