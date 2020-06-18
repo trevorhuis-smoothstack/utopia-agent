@@ -44,27 +44,45 @@ public class AgentService {
      * @param booking
      * @return
      */
-    @Transactional
+    
     public String createBooking(Booking booking) {
+        try {
+            String transactionResult = createBookingTransaction(booking);
+            return transactionResult;
+        } catch (CardException e) {
+            return "Card Declined";
+        } catch (Throwable t) {
+            return "Internal Server Error";
+        }
+    }    
+
+    /**
+     * 
+     * @param booking
+     * @return
+     * @throws APIException
+     * @throws CardException
+     * @throws APIConnectionException
+     * @throws InvalidRequestException
+     * @throws AuthenticationException
+     */
+    @Transactional
+    public String createBookingTransaction(Booking booking) throws AuthenticationException, InvalidRequestException,
+            APIConnectionException, CardException, APIException {
 
         Flight flight;
-		try {
-			flight = flightDAO.findByFlightId(booking.getFlightId());
-		} catch (Throwable t) {
-			return null;
-		}
+		
+		flight = flightDAO.findByFlightId(booking.getFlightId());
+
 		if (flight.getSeatsAvailable() <= 0)
             return "Flight Full";
 
-        try {
-            Charge charge = stripePurchase(booking);
-            booking.setStripeId(charge.getId());
-            bookingDAO.save(booking);
-          } catch (CardException e) {
-            return "Card Declined";
-          } catch (Throwable t) {
-            return "Internal Server Error";
-          }
+        Charge charge = stripePurchase(booking);
+        booking.setStripeId(charge.getId());    
+
+        bookingDAO.save(booking);  
+
+        flight.setSeatsAvailable((short) (flight.getSeatsAvailable()-1));
 
         return "Charge Created";
     }
@@ -110,23 +128,41 @@ public class AgentService {
         }
     }
 
-    /**
-     * 
-     * @param booking
-     * @return
-     */
-    @Transactional
     public String cancelBooking(Booking booking) {
-
         try {
-            stripeRefund(booking);
-            booking.setActive(false);
-            bookingDAO.save(booking);
+            String transactionResult = cancelBookingTransaction(booking);
+            return transactionResult;
         } catch (InvalidRequestException e) {
             return "Already Refunded";
         } catch (Throwable t) {
             return "Internal Server Error";
         }
+    }
+
+    /**
+     * 
+     * @param booking
+     * @return
+     * @throws APIException
+     * @throws CardException
+     * @throws APIConnectionException
+     * @throws InvalidRequestException
+     * @throws AuthenticationException
+     */
+    @Transactional
+    public String cancelBookingTransaction(Booking booking) throws AuthenticationException, InvalidRequestException,
+            APIConnectionException, CardException, APIException {
+                
+        stripeRefund(booking);
+
+        booking.setActive(false);
+        bookingDAO.save(booking);
+
+        Flight flight;
+		
+		flight = flightDAO.findByFlightId(booking.getFlightId());
+
+		flight.setSeatsAvailable((short) (flight.getSeatsAvailable()+1));
 
         return "Refund Processed";
     }
