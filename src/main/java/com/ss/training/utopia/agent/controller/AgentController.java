@@ -3,6 +3,7 @@ package com.ss.training.utopia.agent.controller;
 import java.util.List;
 
 import com.ss.training.utopia.agent.entity.Booking;
+import com.ss.training.utopia.agent.entity.Flight;
 import com.ss.training.utopia.agent.service.AgentService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,5 +82,20 @@ public class AgentController {
 		}
 		
 		return new ResponseEntity<Booking>(booking, status);
+	}
+
+	@GetMapping(path="/flights")
+    public ResponseEntity<Flight[]> getAllAvailableFlights() {
+		List<Flight> flightList = null;
+		Flight[] flightArray = null;
+		HttpStatus status = HttpStatus.OK;
+		flightList = service.readAvailableFlights();
+		if (flightList == null)
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		else if (flightList.size() == 0) // no flights exist in the database
+			status = HttpStatus.NO_CONTENT;
+		else
+        	flightArray = flightList.toArray(new Flight[flightList.size()]);
+		return new ResponseEntity<Flight[]>(flightArray, status);
 	}
 }

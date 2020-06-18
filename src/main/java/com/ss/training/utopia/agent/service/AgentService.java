@@ -131,7 +131,6 @@ public class AgentService {
         return "Refund Processed";
     }
 
-
     /**
      * 
      * @param booking
@@ -154,5 +153,15 @@ public class AgentService {
             );
 
         Refund.create(params);
+    }
+
+    public List<Flight> readAvailableFlights() {
+        
+        try {
+            List<Flight> flights = flightDAO.findAvailable();
+            return flights;
+        } catch (Throwable t) {
+            return null;
+        }
     }
 }
