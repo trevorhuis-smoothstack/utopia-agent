@@ -36,6 +36,8 @@ public class AgentController {
 				break;
 			case("Flight Full"):
 				status = HttpStatus.NO_CONTENT;
+				booking = null;
+				return new ResponseEntity<Booking>(booking, status);
 			case("Internal Server Error"):
 				status = HttpStatus.INTERNAL_SERVER_ERROR;
 				break;
@@ -75,7 +77,6 @@ public class AgentController {
 				break;
 			case("Refund Processed"):
 				status = HttpStatus.OK;
-				booking.setActive(false);
 				break;
 		}
 		

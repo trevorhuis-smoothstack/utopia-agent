@@ -9,6 +9,7 @@ import com.ss.training.utopia.agent.dao.FlightDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,10 +27,11 @@ import com.stripe.model.Refund;
 /**
  * @author Trevor Huis in 't Veld
  */
+@PropertySource("classpath:api.properties")
 @Component
 public class AgentService {
 
-    @Value("${stripe.api.secret}")
+    @Value("${STRIPE_API_SECRET}")
     private String stripeKey;
 
     @Autowired
@@ -60,11 +62,9 @@ public class AgentService {
             bookingDAO.save(booking);
           } catch (CardException e) {
             return "Card Declined";
-          } catch (Exception e) {
+          } catch (Throwable t) {
             return "Internal Server Error";
-            } catch (Throwable t) {
-                return "Internal Server Error";
-            }
+          }
 
         return "Charge Created";
     }
@@ -115,6 +115,7 @@ public class AgentService {
      * @param booking
      * @return
      */
+    @Transactional
     public String cancelBooking(Booking booking) {
 
         try {
@@ -123,8 +124,6 @@ public class AgentService {
             bookingDAO.save(booking);
         } catch (InvalidRequestException e) {
             return "Already Refunded";
-        } catch (Exception e) {
-            return "Internal Server Error";
         } catch (Throwable t) {
             return "Internal Server Error";
         }
@@ -143,7 +142,7 @@ public class AgentService {
      * @throws CardException
      * @throws APIException
      */
-    public Refund stripeRefund(Booking booking) throws AuthenticationException, InvalidRequestException,
+    public void stripeRefund(Booking booking) throws AuthenticationException, InvalidRequestException,
             APIConnectionException, CardException, APIException {
         
         Stripe.apiKey = stripeKey;
@@ -154,7 +153,6 @@ public class AgentService {
             booking.getStripeId()
             );
 
-        Refund refund = Refund.create(params);
-        return refund;
+        Refund.create(params);
     }
 }

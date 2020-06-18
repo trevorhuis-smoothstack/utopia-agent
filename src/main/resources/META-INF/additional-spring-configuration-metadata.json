@@ -1,5 +1,5 @@
 {"properties": [{
-  "name": "stripe.api.secret",
+  "name": "STRIPE_API_SECRET",
   "type": "java.lang.String",
-  "description": "A description for 'stripe.api.secret'"
+  "description": "A description for 'STRIPE_API_SECRET'"
 }]}
