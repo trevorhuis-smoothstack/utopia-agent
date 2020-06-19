@@ -84,6 +84,8 @@ public class AgentService {
 
         flight.setSeatsAvailable((short) (flight.getSeatsAvailable()-1));
 
+        flightDAO.save(flight);
+
         return "Charge Created";
     }
 
@@ -162,7 +164,9 @@ public class AgentService {
 		
 		flight = flightDAO.findByFlightId(booking.getFlightId());
 
-		flight.setSeatsAvailable((short) (flight.getSeatsAvailable()+1));
+        flight.setSeatsAvailable((short) (flight.getSeatsAvailable()+1));
+        
+        flightDAO.save(flight);
 
         return "Refund Processed";
     }
