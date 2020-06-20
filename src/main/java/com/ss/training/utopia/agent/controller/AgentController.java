@@ -27,6 +27,12 @@ public class AgentController {
 	@Autowired
 	AgentService service;
 
+
+    @GetMapping(path="/airports")
+    public ResponseEntity<Airport[]> getAllAirports() {
+		List<Airport> airportList = null;
+		Airport[] airportArray = null;
+
 	@PostMapping(path = "/booking")
 	public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;

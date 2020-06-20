@@ -89,7 +89,6 @@ public class AgentService {
         return "Charge Created";
     }
 
-
     /**
      * 
      * @param booking
@@ -100,6 +99,16 @@ public class AgentService {
      * @throws CardException
      * @throws APIException
      */
+
+    public List<Airport> readAirports() {
+        try {
+            List<Airport> airports = airportDAO.findAll();
+            return airports;
+                  } catch (Throwable t) {
+            return null;
+        }
+    }
+  
     public Charge stripePurchase(Booking booking) throws AuthenticationException, InvalidRequestException,
     APIConnectionException, CardException, APIException {
         
