@@ -1,18 +1,13 @@
 package com.ss.training.utopia.agent;
 
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.List;
 
-import com.ss.training.utopia.agent.dao.BookingDAO;
 import com.ss.training.utopia.agent.dao.FlightDAO;
-import com.ss.training.utopia.agent.entity.Booking;
 import com.ss.training.utopia.agent.entity.Flight;
-import com.ss.training.utopia.agent.service.AgentService;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +32,6 @@ public class DAOTestSuite {
         Long threeLong = (long) 3;
 
         Timestamp timestamp = new Timestamp(Instant.now().toEpochMilli());
-
 		
 		Flight flightOne = new Flight(oneLong, twoLong, timestamp, oneLong, (short) 0, null);
 		Flight flightTwo = new Flight(twoLong, oneLong, timestamp, twoLong, (short) 0, null);

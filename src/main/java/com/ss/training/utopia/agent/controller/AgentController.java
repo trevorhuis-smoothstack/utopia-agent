@@ -2,6 +2,7 @@ package com.ss.training.utopia.agent.controller;
 
 import java.util.List;
 
+import com.ss.training.utopia.agent.entity.Airport;
 import com.ss.training.utopia.agent.entity.Booking;
 import com.ss.training.utopia.agent.entity.Flight;
 import com.ss.training.utopia.agent.service.AgentService;

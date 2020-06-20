@@ -12,42 +12,61 @@ import javax.persistence.Table;
 @Entity
 @Table(name="tbl_airport")
 public class Airport implements Serializable {
-    
-    /**
-	 *  
+ 
+
+	/**
+	 *
 	 */
-	private static final long serialVersionUID = 2302957380915149824L;
+	private static final long serialVersionUID = 3071310522090611039L;
 
 	@Id
-    @Column(name="airportId")
+	@Column
 	private Long airportId;
-	
-    @Column(name="name")
-    private String name;
 
-    public Long getAirportId() {
-		return airportId;
+	@Column
+	private String name;
+
+	/**
+	 * 
+	 */
+	public Airport() {
 	}
 
-	public void setAirportId(Long airportId) {
+	/**
+	 * @param airportId
+	 * @param name
+	 */
+	public Airport(Long airportId, String name) {
 		this.airportId = airportId;
+		this.name = name;
 	}
 
+	/**
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * @param name the name to set
+	 */
 	public void setName(String name) {
 		this.name = name;
-    }
-    
-    
+	}
+
+	/**
+	 * @return the airportId
+	 */
+	public Long getAirportId() {
+		return airportId;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((airportId == null) ? 0 : airportId.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
 
@@ -65,16 +84,7 @@ public class Airport implements Serializable {
 				return false;
 		} else if (!airportId.equals(other.airportId))
 			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
 		return true;
 	}
 
-	public Airport(Long airportId, String name) {
-		this.airportId = airportId;
-		this.name = name;
-	}
 }

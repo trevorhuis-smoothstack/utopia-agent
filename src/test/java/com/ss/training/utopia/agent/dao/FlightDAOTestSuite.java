@@ -10,11 +10,7 @@ import java.util.List;
 
 import com.ss.training.utopia.agent.AgentApplication;
 import com.ss.training.utopia.agent.H2TestProfileJPAConfig;
-import com.ss.training.utopia.agent.dao.BookingDAO;
-import com.ss.training.utopia.agent.dao.FlightDAO;
-import com.ss.training.utopia.agent.entity.Booking;
 import com.ss.training.utopia.agent.entity.Flight;
-import com.ss.training.utopia.agent.service.AgentService;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
