@@ -72,4 +72,9 @@ public class Airport implements Serializable {
 			return false;
 		return true;
 	}
+
+	public Airport(Long airportId, String name) {
+		this.airportId = airportId;
+		this.name = name;
+	}
 }
