@@ -32,6 +32,14 @@ public class AgentController {
     public ResponseEntity<Airport[]> getAllAirports() {
 		List<Airport> airportList = null;
 		Airport[] airportArray = null;
+		HttpStatus status = HttpStatus.OK;
+		airportList = service.readAirports();
+		if (airportList == null) // no airports exist in the database
+			status = HttpStatus.NO_CONTENT;
+		else
+        airportArray = airportList.toArray(new Airport[airportList.size()]);
+		return new ResponseEntity<Airport[]>(airportArray, status);
+	}
 
 	@PostMapping(path = "/booking")
 	public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {

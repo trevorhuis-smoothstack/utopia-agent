@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ss.training.utopia.agent.dao.AirportDAO;
 import com.ss.training.utopia.agent.dao.BookingDAO;
 import com.ss.training.utopia.agent.dao.FlightDAO;
 
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ss.training.utopia.agent.entity.Airport;
 import com.ss.training.utopia.agent.entity.Booking;
 import com.ss.training.utopia.agent.entity.Flight;
 import com.stripe.Stripe;
@@ -34,8 +36,9 @@ public class AgentService {
     @Value("${STRIPE_API_SECRET}")
     private String stripeKey;
 
-    @Autowired
-    BookingDAO bookingDAO;
+    @Autowired BookingDAO bookingDAO;
+
+    @Autowired AirportDAO airportDAO;
 
     @Autowired FlightDAO flightDAO;
 
@@ -88,26 +91,6 @@ public class AgentService {
 
         return "Charge Created";
     }
-
-    /**
-     * 
-     * @param booking
-     * @return
-     * @throws AuthenticationException
-     * @throws InvalidRequestException
-     * @throws APIConnectionException
-     * @throws CardException
-     * @throws APIException
-     */
-
-    public List<Airport> readAirports() {
-        try {
-            List<Airport> airports = airportDAO.findAll();
-            return airports;
-                  } catch (Throwable t) {
-            return null;
-        }
-    }
   
     public Charge stripePurchase(Booking booking) throws AuthenticationException, InvalidRequestException,
     APIConnectionException, CardException, APIException {
@@ -124,20 +107,6 @@ public class AgentService {
         Charge charge = Charge.create(params);
         return charge;
         }
-
-    /**
-     * 
-     * @param bookerId
-     * @return
-     */
-    public List<Booking> readAgentBookings(Long bookerId) {
-        try {
-            List<Booking> bookings = bookingDAO.findByBookerId(bookerId);
-            return bookings;
-        } catch (Throwable t) {
-            return null;
-        }
-    }
 
     public String cancelBooking(Booking booking) {
         try {
@@ -209,6 +178,29 @@ public class AgentService {
         try {
             List<Flight> flights = flightDAO.findAvailable();
             return flights;
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
+    public List<Airport> readAirports() {
+        try {
+            List<Airport> airports = airportDAO.findAll();
+            return airports;
+                  } catch (Throwable t) {
+            return null;
+        }
+    }
+
+        /**
+     * 
+     * @param bookerId
+     * @return
+     */
+    public List<Booking> readAgentBookings(Long bookerId) {
+        try {
+            List<Booking> bookings = bookingDAO.findByBookerId(bookerId);
+            return bookings;
         } catch (Throwable t) {
             return null;
         }

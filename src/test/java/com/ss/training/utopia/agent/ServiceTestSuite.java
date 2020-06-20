@@ -59,6 +59,7 @@ public class ServiceTestSuite {
 		assertEquals(foundBookings.size(), 1);
     }
 
+    @Test
 	public void readBookingsByAgent() {
         Booking bookingByAgent = new Booking((long) 1, (long) 1, (long) 1, true, null);
         Booking bookingByAgent2 = new Booking((long) 2, (long) 1, (long) 1, true, null);
