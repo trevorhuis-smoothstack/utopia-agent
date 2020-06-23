@@ -84,7 +84,7 @@ public class AgentController {
 	public ResponseEntity<Booking> cancelBooking(@RequestBody Booking booking) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 
-		String bookingResult = service.createBooking(booking);
+		String bookingResult = service.cancelBooking(booking);
 		switch (bookingResult) {
 			case("Already Refunded"):
 				break;
