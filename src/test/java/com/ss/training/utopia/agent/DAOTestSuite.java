@@ -25,7 +25,7 @@ H2TestProfileJPAConfig.class})
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 public class DAOTestSuite {
 
-    @Autowired private FlightDAO flightDAO;
+    @Autowired FlightDAO flightDAO;
 
     @Test
 	public void findByFlightIdTest() {

@@ -1,7 +1,6 @@
 package com.ss.training.utopia.agent.service;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -22,13 +21,13 @@ import com.ss.training.utopia.agent.entity.User;
 public class UserServiceTests {
 
 	@Mock
-	private UserDAO userDAO;
+	UserDAO userDAO;
 
 	@InjectMocks
-	private UserService userService;
+	UserService userService;
 
 	@Mock
-	private BookingDAO bookingDao;
+	BookingDAO bookingDao;
 
 
 	@BeforeEach
@@ -41,23 +40,8 @@ public class UserServiceTests {
 		String password = "password";
 		User user = new User(null, null, null, password, null);
 		Mockito.when(userDAO.save(user)).thenReturn(null);
-		assertTrue(userService.createUser(user));
+		assertEquals(userService.createUser(user), user);
 		assertTrue(new BCryptPasswordEncoder().matches(password, user.getPassword()));
 		Mockito.when(userDAO.save(user)).thenThrow(new RuntimeException());
-		assertNull(userService.createUser(user));
 	}
-
-	@Test
-	public void userIsTravelerTest() {
-		String username = "Username";
-		User traveler = new User(null, null, null, null, "TRAVELER"),
-				nonTraveler = new User(null, null, null, null, "AGENT");
-		Mockito.when(userDAO.findByUsername(username)).thenReturn(traveler, nonTraveler, null);
-		assertTrue(userService.userIsTraveler(username));
-		assertFalse(userService.userIsTraveler(username));
-		assertFalse(userService.userIsTraveler(username));
-		Mockito.when(userDAO.findByUsername(username)).thenThrow(new RuntimeException());
-		assertNull(userService.userIsTraveler(username));
-	}
-
 }

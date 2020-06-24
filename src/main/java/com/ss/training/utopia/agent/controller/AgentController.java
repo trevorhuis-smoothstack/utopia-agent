@@ -5,7 +5,11 @@ import java.util.List;
 import com.ss.training.utopia.agent.entity.Airport;
 import com.ss.training.utopia.agent.entity.Booking;
 import com.ss.training.utopia.agent.entity.Flight;
-import com.ss.training.utopia.agent.service.AgentService;
+import com.ss.training.utopia.agent.entity.User;
+import com.ss.training.utopia.agent.service.AgentBookingService;
+import com.ss.training.utopia.agent.service.AgentCancelService;
+import com.ss.training.utopia.agent.service.AgentReadService;
+import com.ss.training.utopia.agent.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,8 +29,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/agent")
 public class AgentController {
 
-	@Autowired
-	AgentService service;
+	@Autowired AgentReadService readService;
+
+	@Autowired AgentBookingService bookingService;
+
+	@Autowired AgentCancelService cancelService;
+
+	@Autowired UserService userService;
 
 
     @GetMapping(path="/airports")
@@ -34,7 +43,7 @@ public class AgentController {
 		List<Airport> airportList = null;
 		Airport[] airportArray = null;
 		HttpStatus status = HttpStatus.OK;
-		airportList = service.readAirports();
+		airportList = readService.readAirports();
 		if (airportList == null) // no airports exist in the database
 			status = HttpStatus.NO_CONTENT;
 		else
@@ -46,7 +55,7 @@ public class AgentController {
 	public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 
-		String bookingResult = service.createBooking(booking);
+		String bookingResult = bookingService.createBooking(booking);
 		switch (bookingResult) {
 			case("Card Declined"):
 				break;
@@ -70,7 +79,7 @@ public class AgentController {
 		List<Booking> bookingList = null;
 		Booking[] bookingArray = null;
 		HttpStatus status = HttpStatus.OK;
-		bookingList = service.readAgentBookings(agentId);
+		bookingList = readService.readAgentBookings(agentId);
 		if (bookingList == null)
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		else if (bookingList.size() == 0) // no bookings exist in the database
@@ -84,7 +93,7 @@ public class AgentController {
 	public ResponseEntity<Booking> cancelBooking(@RequestBody Booking booking) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 
-		String bookingResult = service.cancelBooking(booking);
+		String bookingResult = cancelService.cancelBooking(booking);
 		switch (bookingResult) {
 			case("Already Refunded"):
 				break;
@@ -104,7 +113,7 @@ public class AgentController {
 		List<Flight> flightList = null;
 		Flight[] flightArray = null;
 		HttpStatus status = HttpStatus.OK;
-		flightList = service.readAvailableFlights();
+		flightList = readService.readAvailableFlights();
 		if (flightList == null)
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		else if (flightList.size() == 0) // no flights exist in the database
@@ -112,5 +121,36 @@ public class AgentController {
 		else
         	flightArray = flightList.toArray(new Flight[flightList.size()]);
 		return new ResponseEntity<Flight[]>(flightArray, status);
+	}
+
+	@GetMapping(path = "/users/{username}")
+	public ResponseEntity<User> getUser(@PathVariable String username) {
+		User user = null;
+		HttpStatus status = HttpStatus.OK;
+
+		try {
+			user = userService.getUser(username);
+        } catch (Throwable t) {
+            return new ResponseEntity<User>(user, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+		
+		if (user == null) {
+			status = HttpStatus.NOT_FOUND;
+		}
+
+		return new ResponseEntity<User>(user, status);
+	}
+
+	@PostMapping(path = "/user")
+	public ResponseEntity<User> createUser(@RequestBody User user) {
+		HttpStatus status = HttpStatus.CREATED;
+		try {
+			user = userService.createUser(user);
+		} catch (Throwable t) {
+			user = null;
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<User>(user, status);
+
 	}
 }
