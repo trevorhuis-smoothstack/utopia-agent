@@ -19,15 +19,33 @@ public class UserService {
     public User createUser(User user) {
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
 		userDao.save(user);
+		user.setPassword(null);
 		return user;
-
 	}
 
 	public User getUser(String username) {
-		User user = userDao.findByUsername(username);
+		return userDao.findByUsername(username);
+	}
+
+	public User getUserById(Long userId) {
+		User user = userDao.findByUserId(userId);
 		user.setPassword(null);
 
 		return user;
+	}
+
+	public User getUserAndCheckPassword(User user) {
+		User foundUser =  userDao.findByUsername(user.getUsername());
+		String sentPassword = new BCryptPasswordEncoder().encode(user.getPassword());
+		System.out.println(sentPassword);
+		System.out.println(foundUser.getPassword());
+
+		if(sentPassword.matches(foundUser.getPassword()) && foundUser.getRole().equals("TRAVELER")) {
+			foundUser.setPassword(null);
+			return foundUser;
+		}
+
+		return null;
 	}
 
 }

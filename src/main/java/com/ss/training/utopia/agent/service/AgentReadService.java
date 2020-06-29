@@ -27,8 +27,25 @@ public class AgentReadService {
 
     @Autowired FlightDAO flightDAO;
 
+    public Flight readFlight(Long flightId) {
+        try {
+            Flight flight = flightDAO.findByFlightId(flightId);
+            return flight;
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
+    public Airport readAirport(Long airportId) {
+        try {
+            Airport airport = airportDAO.findByAirportId(airportId);
+            return airport;
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
     public List<Flight> readAvailableFlights() {
-        
         try {
             List<Flight> flights = flightDAO.findAvailable();
             return flights;

@@ -89,6 +89,30 @@ public class AgentController {
 		return new ResponseEntity<Booking[]>(bookingArray, status);
 	}
 
+	@GetMapping(path = "/airport/{airportId}")
+	public ResponseEntity<Airport> getAirport(@PathVariable Long airportId) {
+		Airport airport = null;
+		HttpStatus status = HttpStatus.OK;
+		airport = readService.readAirport(airportId);
+
+		if (airport == null) {
+			status = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<Airport>(airport, status);
+	}
+
+	@GetMapping(path = "/flight/{flightId}")
+	public ResponseEntity<Flight> getFlight(@PathVariable Long flightId) {
+		Flight flight = null;
+		HttpStatus status = HttpStatus.OK;
+		flight = readService.readFlight(flightId);
+
+		if (flight == null) {
+			status = HttpStatus.NOT_FOUND;
+		}
+		return new ResponseEntity<Flight>(flight, status);
+	}
+
 	@PutMapping(path="/booking")
 	public ResponseEntity<Booking> cancelBooking(@RequestBody Booking booking) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
@@ -123,13 +147,50 @@ public class AgentController {
 		return new ResponseEntity<Flight[]>(flightArray, status);
 	}
 
-	@GetMapping(path = "/users/{username}")
-	public ResponseEntity<User> getUser(@PathVariable String username) {
+	@GetMapping(path = "/user/username/{username}")
+	public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
 		User user = null;
 		HttpStatus status = HttpStatus.OK;
 
 		try {
 			user = userService.getUser(username);
+        } catch (Throwable t) {
+            return new ResponseEntity<User>(user, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+		
+		if (user == null) {
+			status = HttpStatus.NO_CONTENT;
+		}
+
+		return new ResponseEntity<User>(user, status);
+	}
+
+	@PostMapping(path = "/traveler")
+	public ResponseEntity<User> getUserWithPasswordCheck(@RequestBody User sentUser) {
+		HttpStatus status = HttpStatus.OK;
+		User user = null;
+
+		try {
+			user = userService.getUserAndCheckPassword(sentUser);
+        } catch (Throwable t) {
+            return new ResponseEntity<User>(user, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+		
+		if (user == null) {
+			status = HttpStatus.NOT_FOUND;
+		} 
+
+		return new ResponseEntity<User>(user, status);
+		
+	}
+
+	@GetMapping(path = "/user/id/{userId}")
+	public ResponseEntity<User> getUserById(@PathVariable Long userId) {
+		User user = null;
+		HttpStatus status = HttpStatus.OK;
+
+		try {
+			user = userService.getUserById(userId);
         } catch (Throwable t) {
             return new ResponseEntity<User>(user, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -153,4 +214,6 @@ public class AgentController {
 		return new ResponseEntity<User>(user, status);
 
 	}
+
+	
 }
