@@ -74,8 +74,8 @@ public class BookingServiceTestSuite {
 
 
         Booking booking = new Booking(1l, 1l, 1l, true, null);
-        Flight emptyFlight = new Flight(1l, 1l, null, 1l, (short) 0, 10f);
-        Mockito.when(flightDAO.findByFlightId(booking.getFlightId())).thenReturn(emptyFlight);        
+        Flight fullFlight = new Flight(1l, 1l, null, 1l, (short) 0, 10f);
+        Mockito.when(flightDAO.findByFlightId(booking.getFlightId())).thenReturn(fullFlight);        
         String createBookingResult = service.createBookingTransaction(booking);
 
         assertEquals(createBookingResult, "Flight Full");

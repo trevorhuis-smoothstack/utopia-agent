@@ -44,7 +44,7 @@ public class AgentController {
 		Airport[] airportArray = null;
 		HttpStatus status = HttpStatus.OK;
 		airportList = readService.readAirports();
-		if (airportList == null) // no airports exist in the database
+		if (airportList.size() == 0) // no airports exist in the database
 			status = HttpStatus.NO_CONTENT;
 		else
         airportArray = airportList.toArray(new Airport[airportList.size()]);
@@ -66,7 +66,7 @@ public class AgentController {
 			case("Internal Server Error"):
 				status = HttpStatus.INTERNAL_SERVER_ERROR;
 				break;
-			case("Charge Created"):
+			case("Flight Booked"):
 				status = HttpStatus.CREATED;
 				break;
 		}
@@ -124,7 +124,7 @@ public class AgentController {
 			case("Internal Server Error"):
 				status = HttpStatus.INTERNAL_SERVER_ERROR;
 				break;
-			case("Refund Processed"):
+			case("Flight Cancelled"):
 				status = HttpStatus.OK;
 				break;
 		}
