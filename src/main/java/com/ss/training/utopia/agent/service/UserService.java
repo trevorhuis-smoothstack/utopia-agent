@@ -23,7 +23,7 @@ public class UserService {
 		return user;
 	}
 
-	public User getUser(String username) {
+	public User getUserByUsername(String username) {
 		return userDao.findByUsername(username);
 	}
 
@@ -34,13 +34,10 @@ public class UserService {
 		return user;
 	}
 
-	public User getUserAndCheckPassword(User user) {
-		User foundUser =  userDao.findByUsername(user.getUsername());
-		String sentPassword = new BCryptPasswordEncoder().encode(user.getPassword());
-		System.out.println(sentPassword);
-		System.out.println(foundUser.getPassword());
+	public User getUserAndCheckTraveler(String username) {
+		User foundUser = userDao.findByUsername(username);
 
-		if(sentPassword.matches(foundUser.getPassword()) && foundUser.getRole().equals("TRAVELER")) {
+		if(foundUser.getRole().equals("TRAVELER")) {
 			foundUser.setPassword(null);
 			return foundUser;
 		}

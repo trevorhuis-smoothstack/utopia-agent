@@ -89,18 +89,6 @@ public class AgentController {
 		return new ResponseEntity<Booking[]>(bookingArray, status);
 	}
 
-	@GetMapping(path = "/airport/{airportId}")
-	public ResponseEntity<Airport> getAirport(@PathVariable Long airportId) {
-		Airport airport = null;
-		HttpStatus status = HttpStatus.OK;
-		airport = readService.readAirport(airportId);
-
-		if (airport == null) {
-			status = HttpStatus.NOT_FOUND;
-		}
-		return new ResponseEntity<Airport>(airport, status);
-	}
-
 	@GetMapping(path = "/flight/{flightId}")
 	public ResponseEntity<Flight> getFlight(@PathVariable Long flightId) {
 		Flight flight = null;
@@ -153,7 +141,7 @@ public class AgentController {
 		HttpStatus status = HttpStatus.OK;
 
 		try {
-			user = userService.getUser(username);
+			user = userService.getUserByUsername(username);
         } catch (Throwable t) {
             return new ResponseEntity<User>(user, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -165,23 +153,22 @@ public class AgentController {
 		return new ResponseEntity<User>(user, status);
 	}
 
-	@PostMapping(path = "/traveler")
-	public ResponseEntity<User> getUserWithPasswordCheck(@RequestBody User sentUser) {
-		HttpStatus status = HttpStatus.OK;
+	@GetMapping(path = "/traveler/{username}")
+	public ResponseEntity<User> getTravelerByUsername(@PathVariable String username) {
 		User user = null;
+		HttpStatus status = HttpStatus.OK;
 
 		try {
-			user = userService.getUserAndCheckPassword(sentUser);
+			user = userService.getUserAndCheckTraveler(username);
         } catch (Throwable t) {
             return new ResponseEntity<User>(user, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 		
 		if (user == null) {
-			status = HttpStatus.NOT_FOUND;
-		} 
+			status = HttpStatus.NO_CONTENT;
+		}
 
 		return new ResponseEntity<User>(user, status);
-		
 	}
 
 	@GetMapping(path = "/user/id/{userId}")

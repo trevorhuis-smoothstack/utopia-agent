@@ -35,16 +35,7 @@ public class AgentReadService {
             return null;
         }
     }
-
-    public Airport readAirport(Long airportId) {
-        try {
-            Airport airport = airportDAO.findByAirportId(airportId);
-            return airport;
-        } catch (Throwable t) {
-            return null;
-        }
-    }
-
+    
     public List<Flight> readAvailableFlights() {
         try {
             List<Flight> flights = flightDAO.findAvailable();
