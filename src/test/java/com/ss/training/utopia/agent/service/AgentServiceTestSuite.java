@@ -55,43 +55,29 @@ public class AgentServiceTestSuite {
     @Test
 	public void readBookingsByAgentNoBookings() {
 
-        List<Booking> bookingsByAgent = readService.readAgentBookings((long) 1);
+        Booking[] bookingsByAgent = readService.readAgentBookings((long) 1);
 
-        assertEquals(bookingsByAgent.size(), 0);
+        assertEquals(bookingsByAgent.length, 0);
     }
 
-    // @Test
-	// public void readAvailableFlights() {
-    //    //Longs
-    //    Long oneLong = (long) 1;
-    //    Long twoLong = (long) 2;
-    //    Long threeLong = (long) 3;
-    //    Long fourLong = (long) 4;
+    @Test
+    public void readSingleFlightTest() {
+    	final Long HOUR = (long) 3_600_000;
+    	Long now = Instant.now().toEpochMilli();
+    	Timestamp future = new Timestamp(now + HOUR);
+    	Flight futureFlight = new Flight(2l, 2l, future, 1l,(short) 5, null);
+    	Mockito.when(flightDAO.findByFlightId(1l)).thenReturn(futureFlight);
+    	
+    	Flight foundFlight = readService.readFlight(1l);
+    	assertEquals(foundFlight, futureFlight);
+    }
 
-    //    // Times
-    //    final Long HOUR = (long) 3_600_000;
-    //    Long now = Instant.now().toEpochMilli();
-    //    Timestamp past = new Timestamp(now - HOUR);
-    //    Timestamp future = new Timestamp(now + HOUR);
-
-    //    Flight futureFlight = new Flight(twoLong, twoLong, future, oneLong,(short) 5, null);
-    //    Flight pastFlight = new Flight(oneLong, twoLong, past, twoLong, null, null);
-    //    Flight otherFutureFlight = new Flight(twoLong, oneLong, future, threeLong, (short) 5, null);
-    //    Flight otherFutureFlightNoSeats = new Flight(oneLong, threeLong, future, fourLong, (short) 0, null);
-
-    //    flightDAO.save(futureFlight);
-    //    flightDAO.save(pastFlight);
-    //    flightDAO.save(otherFutureFlight);
-    //    flightDAO.save(otherFutureFlightNoSeats);
-
-    //    List<Flight> flights = readService.readAvailableFlights();
-
-    //     assertEquals(flights.size(), 2);
-    //     assertEquals( flights.get(0).getDepartId(), twoLong);
-    //     assertEquals( flights.get(1).getDepartId(), twoLong);
-    //     assertNotEquals((short) flights.get(0).getSeatsAvailable(), (short) 0);
-    //     assertNotEquals((short) flights.get(1).getSeatsAvailable(), (short) 0);
-    // }
+    @Test
+    public void readSingleFlightTestException() {
+        Mockito.doThrow(NullPointerException.class).when(flightDAO).findByFlightId(1l);
+        Flight foundFlight = readService.readFlight(1l);
+    	assertEquals(foundFlight, null);
+    }
 
     @Test
 	public void readAvailableFlights() {
@@ -110,17 +96,25 @@ public class AgentServiceTestSuite {
 
         Mockito.when(flightDAO.findAvailable()).thenReturn(flights);
 
-        List<Flight> foundFlights = readService.readAvailableFlights();
+        Flight[] foundFlights = readService.readAvailableFlights();
 
-        assertEquals(foundFlights.size(), 2);
+        assertEquals(foundFlights.length, 2);
     }
+    
+    @Test
+    public void readAvailableFlightsTestException() {
+        Mockito.doThrow(NullPointerException.class).when(flightDAO).findAvailable();
+        Flight[] foundFlights = readService.readAvailableFlights();
+    	assertEquals(foundFlights, null);
+    }	
+    
 
     @Test
 	public void readNoAvailableFlights() {
 
-        List<Flight> flights = readService.readAvailableFlights();
+        Flight[] flights = readService.readAvailableFlights();
 
-        assertEquals(flights.size(), 0);
+        assertEquals(flights.length, 0);
     }
 
     @Test
@@ -134,17 +128,24 @@ public class AgentServiceTestSuite {
 
         Mockito.when(bookingDAO.findByBookerId(1l)).thenReturn(bookings);
 
-        List<Booking> bookingsByAgent = readService.readAgentBookings((long) 1);
+        Booking[] bookingsByAgent = readService.readAgentBookings((long) 1);
 
-        assertEquals(bookingsByAgent.size(), 2);
+        assertEquals(bookingsByAgent.length, 2);
+    }
+    
+    @Test 
+    public void readBookingsByAgentException() {
+    	Mockito.doThrow(NullPointerException.class).when(bookingDAO).findByBookerId(1l);
+        Booking[] bookingsByAgent = readService.readAgentBookings((long) 1);
+    	assertEquals(bookingsByAgent, null);
     }
 
     @Test
 	public void readNoAirports() {
 
-        List<Airport> airports = readService.readAirports();
+        Airport[] airports = readService.readAirports();
 
-        assertEquals(airports.size(), 0);
+        assertEquals(airports.length, 0);
     }
 
     @Test
@@ -158,8 +159,15 @@ public class AgentServiceTestSuite {
 
         Mockito.when(airportDAO.findAll()).thenReturn(airports);
 
-        List<Airport> foundAirports = readService.readAirports();
+        Airport[] foundAirports = readService.readAirports();
 
-        assertEquals(foundAirports.size(), 2);
+        assertEquals(foundAirports.length, 2);
+    }
+    
+    @Test
+    public void readAirportsException() {
+    	Mockito.doThrow(NullPointerException.class).when(airportDAO).findAll();
+        Airport[] foundAirports = readService.readAirports();
+    	assertEquals(foundAirports, null);
     }
 }

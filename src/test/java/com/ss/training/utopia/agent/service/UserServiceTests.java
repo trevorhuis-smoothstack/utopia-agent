@@ -1,7 +1,6 @@
 package com.ss.training.utopia.agent.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.ss.training.utopia.agent.dao.BookingDAO;
 import com.ss.training.utopia.agent.dao.UserDAO;
@@ -25,6 +23,9 @@ public class UserServiceTests {
 
 	@InjectMocks
 	UserService userService;
+	
+	@InjectMocks
+	AgentReadService readService;
 
 	@Mock
 	BookingDAO bookingDao;
@@ -41,7 +42,57 @@ public class UserServiceTests {
 		User user = new User(null, null, null, password, null);
 		Mockito.when(userDAO.save(user)).thenReturn(null);
 		assertEquals(userService.createUser(user), user);
-		assertTrue(new BCryptPasswordEncoder().matches(password, user.getPassword()));
 		Mockito.when(userDAO.save(user)).thenThrow(new RuntimeException());
 	}
+	
+	@Test
+    public void readUserByUsername() {
+		String password = "password";
+		User user = new User(1l, "username", null, password, null);
+    	Mockito.when(userDAO.findByUsername("username")).thenReturn(user);
+    	
+    	User foundUser = userService.getUserByUsername("username");
+    	assertEquals(foundUser, user);
+    }
+	
+	@Test
+    public void readUserByUsernameException() {
+		Mockito.doThrow(NullPointerException.class).when(userDAO).findByUsername("username");
+        User foundUser = userService.getUserByUsername("username");
+    	assertEquals(foundUser, null);
+    }
+
+    @Test
+    public void readUserByUserId() {
+    	String password = "password";
+		User user = new User(1l, "username", null, password, null);
+    	Mockito.when(userDAO.findByUserId(1l)).thenReturn(user);
+    	
+    	User foundUser = userService.getUserById(1l);
+    	assertEquals(foundUser, user);
+    }
+    
+    @Test
+    public void readUserByUserIdException() {
+    	Mockito.doThrow(NullPointerException.class).when(userDAO).findByUserId(1l);
+    	User foundUser = userService.getUserById(1l);
+    	assertEquals(foundUser, null);
+    }
+    
+    @Test
+    public void readUserByUsernameAndTravelerTest() {
+    	String password = "password";
+		User user = new User(1l, "username", null, password, "TRAVELER");
+    	Mockito.when(userDAO.findByUsername("username")).thenReturn(user);
+    	
+    	User foundUser = userService.getUserAndCheckTraveler("username");
+    	assertEquals(foundUser, user);
+    }
+    
+    @Test
+    public void readUserByUsernameAndTravelerException() {
+    	Mockito.doThrow(NullPointerException.class).when(userDAO).findByUsername("username");
+    	User foundUser = userService.getUserAndCheckTraveler("username");
+    	assertEquals(foundUser, null);
+    }
 }
