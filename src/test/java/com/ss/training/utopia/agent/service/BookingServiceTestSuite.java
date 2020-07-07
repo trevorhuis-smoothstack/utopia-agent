@@ -14,7 +14,6 @@ import com.stripe.exception.APIException;
 import com.stripe.exception.AuthenticationException;
 import com.stripe.exception.CardException;
 import com.stripe.exception.InvalidRequestException;
-import com.stripe.model.Charge;
 
 import org.junit.Before;
 import org.junit.Test;

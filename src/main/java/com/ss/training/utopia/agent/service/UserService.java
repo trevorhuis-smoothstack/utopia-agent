@@ -37,7 +37,7 @@ public class UserService {
 	public User getUserAndCheckTraveler(String username) {
 		User foundUser = userDao.findByUsername(username);
 
-		if(foundUser.getRole().equals("TRAVELER")) {
+		if(foundUser != null && foundUser.getRole().equals("TRAVELER")) {
 			foundUser.setPassword(null);
 			return foundUser;
 		}
