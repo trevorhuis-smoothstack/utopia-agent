@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ss.training.utopia.agent.entity.Airport;
-import com.ss.training.utopia.agent.entity.Booking;
 import com.ss.training.utopia.agent.entity.Flight;
 import com.ss.training.utopia.agent.service.AgentBookingService;
 import com.ss.training.utopia.agent.service.AgentCancelService;
