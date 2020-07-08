@@ -83,16 +83,16 @@ public class AgentController {
 		return new ResponseEntity<Booking>(booking, status);
 	}
 
-	@GetMapping(path = "/bookings/{agentId}")
-	public ResponseEntity<Booking[]> getAllBookingsByAgent(@PathVariable long agentId) {
-		Booking[] bookingArray = null;
+	@GetMapping(path = "/flights/{agentId}/traveler/{travelerId}")
+	public ResponseEntity<Flight[]> getAllflightsByAgentAndTraveler(@PathVariable long agentId, @PathVariable long travelerId) {
+		Flight[] flightArray = null;
 		HttpStatus status = HttpStatus.OK;
-		bookingArray = readService.readAgentBookings(agentId);
-		if (bookingArray == null)
+		flightArray = readService.readTravelerFlightsByAgent(agentId, travelerId);
+		if (flightArray == null)
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		else if (bookingArray.length == 0) // no bookings exist in the database
+		else if (flightArray.length == 0) // no flights exist in the database
 			status = HttpStatus.NO_CONTENT;
-		return new ResponseEntity<Booking[]>(bookingArray, status);
+		return new ResponseEntity<Flight[]>(flightArray, status);
 	}
 
 	@GetMapping(path = "/flight/{flightId}")

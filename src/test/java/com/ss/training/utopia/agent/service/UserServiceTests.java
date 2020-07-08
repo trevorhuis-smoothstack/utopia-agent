@@ -57,9 +57,12 @@ public class UserServiceTests {
 	
 	@Test
     public void readUserByUsernameException() {
-		Mockito.doThrow(NullPointerException.class).when(userDAO).findByUsername("username");
-        User foundUser = userService.getUserByUsername("username");
-    	assertEquals(foundUser, null);
+		try {
+			Mockito.doThrow(NullPointerException.class).when(userDAO).findByUsername("username");
+		} catch (Exception e){
+			User foundUser = userService.getUserByUsername("username");
+    		assertEquals(foundUser, null);
+		}
     }
 
     @Test
@@ -74,9 +77,12 @@ public class UserServiceTests {
     
     @Test
     public void readUserByUserIdException() {
-    	Mockito.doThrow(NullPointerException.class).when(userDAO).findByUserId(1l);
-    	User foundUser = userService.getUserById(1l);
-    	assertEquals(foundUser, null);
+    	try {
+			Mockito.doThrow(NullPointerException.class).when(userDAO).findByUserId(1l);
+		} catch (Exception e){
+			User foundUser = userService.getUserById(1l);
+			assertEquals(foundUser, null);
+		}
     }
     
     @Test
@@ -91,8 +97,12 @@ public class UserServiceTests {
     
     @Test
     public void readUserByUsernameAndTravelerException() {
-    	Mockito.doThrow(NullPointerException.class).when(userDAO).findByUsername("username");
-    	User foundUser = userService.getUserAndCheckTraveler("username");
-    	assertEquals(foundUser, null);
+		try {
+			Mockito.doThrow(NullPointerException.class).when(userDAO).findByUsername("username");
+		} catch (Exception e){
+			User foundUser = userService.getUserAndCheckTraveler("username");
+    		assertEquals(foundUser, null);
+		}
+    	
     }
 }

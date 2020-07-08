@@ -11,7 +11,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import com.ss.training.utopia.agent.entity.Airport;
-import com.ss.training.utopia.agent.entity.Booking;
 import com.ss.training.utopia.agent.entity.Flight;
 
 /**
@@ -62,10 +61,10 @@ public class AgentReadService {
      * @param bookerId
      * @return
      */
-    public Booking[] readAgentBookings(Long bookerId) {
+    public Flight[] readTravelerFlightsByAgent(Long bookerId, Long travlerId) {
         try {
-            List<Booking> bookings = bookingDAO.findByBookerId(bookerId);
-            return bookings.toArray(new Booking[bookings.size()]);
+            List<Flight> flights = flightDAO.findCancellableFlightsByTravelerId(bookerId, travlerId);
+            return flights.toArray(new Flight[flights.size()]);
         } catch (Throwable t) {
             return null;
         }
