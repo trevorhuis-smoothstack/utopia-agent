@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -18,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ss.training.utopia.agent.entity.Airport;
 import com.ss.training.utopia.agent.entity.Booking;
+import com.ss.training.utopia.agent.entity.Flight;
 import com.ss.training.utopia.agent.service.AgentBookingService;
 import com.ss.training.utopia.agent.service.AgentCancelService;
 import com.ss.training.utopia.agent.service.AgentReadService;
@@ -56,11 +59,14 @@ public class AgentControllerReadTestSuite {
     
     
     @Test
-	public void getAgentBookings() throws Exception {
-		Booking[] bookings = { new Booking(1l, 1l, 1l, true, null),
-            new Booking(2l, 2l, 1l, true, null) };
-		String uri = "/agent/bookings/" + "1", expectedContent = mapper.writeValueAsString(bookings);
-		when(readService.readAgentBookings(1l)).thenReturn(bookings, new Booking[0], null);
+	public void getAgentFlightsByTraveler() throws Exception {
+		final Long HOUR = 3_600_000l;
+		Long now = Instant.now().toEpochMilli();
+		Timestamp futureOne = new Timestamp(now + HOUR), futureTwo = new Timestamp(now + 2 * HOUR);
+		Flight[] flights = { new Flight(1l, 2l, futureOne, 3l, (short) 8, 150f),
+			new Flight(2l, 1l, futureTwo, 3l, (short) 5, 151f) };
+		String uri = "/agent/flights/" + "1" + "/traveler/" + "1", expectedContent = mapper.writeValueAsString(flights);
+		when(readService.readTravelerFlightsByAgent(1l, 1l)).thenReturn(flights, new Flight[0], null);
 		mvc.perform(get(uri)).andExpect(status().isOk()).andExpect(content().string(expectedContent));
         mvc.perform(get(uri)).andExpect(status().isNoContent()).andExpect(content().string("[]"));
         mvc.perform(get(uri)).andExpect(status().isInternalServerError()).andExpect(content().string(""));

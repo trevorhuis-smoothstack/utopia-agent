@@ -62,6 +62,10 @@ public class AgentCancelService {
     @Transactional
     public String cancelBookingTransaction(Booking booking) throws AuthenticationException, InvalidRequestException,
             APIConnectionException, CardException, APIException {
+
+        String stripeId = bookingDAO.findByTravelerIdAndFlightId(booking.getTravelerId(), booking.getFlightId()).getStripeId();       
+
+        booking.setStripeId(stripeId);        
                 
         stripeRefund(booking);
 

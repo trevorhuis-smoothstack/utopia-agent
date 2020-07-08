@@ -35,5 +35,8 @@ public interface FlightDAO extends JpaRepository<Flight, FlightPk> {
     // public List<Flight> findAvailable(String departId, String arriveId, Float price, Timestamp dateBegin, Timestamp dateEnd);
     // value = "SELECT * FROM tbl_flight f WHERE f.seatsAvailable > 0 AND WHERE f.departId LIKE ?1 AND f.departTime BETWEEN ?4 AND ?5",
 
+    @Query(value = "SELECT * FROM tbl_flight f where f.flightId IN (SELECT b.flightId FROM tbl_booking b WHERE b.bookerId = ?1 AND b.travelerId = ?2 AND b.active = true)",
+        nativeQuery = true)
+        public List<Flight> findCancellableFlightsByTravelerId(Long agentId, Long travelerId);
 
 }

@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.ss.training.utopia.agent.AgentApplication;
 import com.ss.training.utopia.agent.H2TestProfileJPAConfig;
+import com.ss.training.utopia.agent.entity.Booking;
 import com.ss.training.utopia.agent.entity.Flight;
 
 import org.junit.Test;
@@ -31,6 +32,8 @@ public class FlightDAOTestSuite {
     
     @Autowired FlightDAO flightDAO;
 
+    @Autowired BookingDAO bookingDAO;
+
     @Test
 	public void findByFlightIdTest() {
         //Longs
@@ -49,6 +52,32 @@ public class FlightDAOTestSuite {
 
 		assertEquals(flightOne, flightDAO.findByFlightId(oneLong));
 		assertNull(flightDAO.findByFlightId(threeLong));
+    }
+
+    @Test
+	public void findCancellableByBookerAndTravelerIdTest() {
+        //Longs
+        Long oneLong = (long) 1;
+        Long twoLong = (long) 2;
+
+        Timestamp timestamp = new Timestamp(Instant.now().toEpochMilli());
+
+		
+		Flight flightOne = new Flight(oneLong, twoLong, timestamp, oneLong, (short) 0, null);
+        Flight flightTwo = new Flight(twoLong, oneLong, timestamp, twoLong, (short) 0, null);
+        
+        Booking bookingToFind = new Booking(oneLong, oneLong, oneLong, true, null);
+        Booking bookingNotByAgent = new Booking(oneLong, twoLong, twoLong, true, null);
+        Booking bookingNotByTraveler = new Booking(twoLong, oneLong, oneLong, true, null);
+        
+        flightDAO.save(flightOne);
+        flightDAO.save(flightTwo);     
+
+        bookingDAO.save(bookingToFind);
+        bookingDAO.save(bookingNotByAgent);
+        bookingDAO.save(bookingNotByTraveler);
+
+		assertEquals(flightOne, flightDAO.findCancellableFlightsByTravelerId(oneLong, oneLong).get(0));
     }
     
     // @Test

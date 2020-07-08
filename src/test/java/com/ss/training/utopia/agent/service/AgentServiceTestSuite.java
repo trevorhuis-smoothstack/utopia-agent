@@ -13,7 +13,6 @@ import com.ss.training.utopia.agent.dao.AirportDAO;
 import com.ss.training.utopia.agent.dao.BookingDAO;
 import com.ss.training.utopia.agent.dao.FlightDAO;
 import com.ss.training.utopia.agent.entity.Airport;
-import com.ss.training.utopia.agent.entity.Booking;
 import com.ss.training.utopia.agent.entity.Flight;
 
 import org.junit.Test;
@@ -52,13 +51,6 @@ public class AgentServiceTestSuite {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test
-	public void readBookingsByAgentNoBookings() {
-
-        Booking[] bookingsByAgent = readService.readAgentBookings((long) 1);
-
-        assertEquals(bookingsByAgent.length, 0);
-    }
 
     @Test
     public void readSingleFlightTest() {
@@ -81,26 +73,28 @@ public class AgentServiceTestSuite {
 
   
     @Test
-	public void readBookingsByAgent() {
-        Booking bookingByAgent = new Booking((long) 1, (long) 1, (long) 1, true, null);
-        Booking bookingNotByAgent = new Booking((long) 3, (long) 1, (long) 2, true, null);
+	public void readTravelerFlightsByAgent() {
+        final Long HOUR = (long) 3_600_000;
+       Long now = Instant.now().toEpochMilli();
+       Timestamp future = new Timestamp(now + HOUR);
+		
+		Flight flightOne = new Flight(1l, 2l, future, 1l, (short) 0, null);
 
-        List<Booking> bookings = new ArrayList<Booking>();
-        bookings.add(bookingByAgent);
-        bookings.add(bookingNotByAgent);
+        List<Flight> flights = new ArrayList<Flight>();
+        flights.add(flightOne);
 
-        Mockito.when(bookingDAO.findByBookerId(1l)).thenReturn(bookings);
+        Mockito.when(flightDAO.findCancellableFlightsByTravelerId(1l, 1l)).thenReturn(flights);
 
-        Booking[] bookingsByAgent = readService.readAgentBookings((long) 1);
+        Flight[] flightsByAgentAndTraveler = readService.readTravelerFlightsByAgent(1l, 1l);
 
-        assertEquals(bookingsByAgent.length, 2);
+        assertEquals(flightsByAgentAndTraveler[0], flightOne);
     }
     
-    @Test 
+    @Test
     public void readBookingsByAgentException() {
-    	Mockito.doThrow(NullPointerException.class).when(bookingDAO).findByBookerId(1l);
-        Booking[] bookingsByAgent = readService.readAgentBookings((long) 1);
-    	assertEquals(bookingsByAgent, null);
+    	Mockito.doThrow(NullPointerException.class).when(flightDAO).findCancellableFlightsByTravelerId(1l, 1l);
+        Flight[] flightsByAgentAndTraveler = readService.readTravelerFlightsByAgent(1l, 1l);
+    	assertEquals(flightsByAgentAndTraveler, null);
     }
 
     @Test
