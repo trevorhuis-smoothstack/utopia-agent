@@ -7,7 +7,6 @@ import com.ss.training.utopia.agent.dao.BookingDAO;
 import com.ss.training.utopia.agent.dao.FlightDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import com.ss.training.utopia.agent.entity.Airport;
@@ -17,7 +16,6 @@ import com.ss.training.utopia.agent.entity.Flight;
 /**
  * @author Trevor Huis in 't Veld
  */
-@PropertySource("classpath:api.properties")
 @Component
 public class AgentReadService {
 
@@ -34,15 +32,6 @@ public class AgentReadService {
         try {
             Flight flight = flightDAO.findByFlightId(flightId);
             return flight;
-        } catch (Throwable t) {
-            return null;
-        }
-    }
-
-    public Flight[] readAvailableFlights() {
-        try {
-            List<Flight> flights = flightDAO.findAvailable();
-            return flights.toArray(new Flight[flights.size()]);
         } catch (Throwable t) {
             return null;
         }

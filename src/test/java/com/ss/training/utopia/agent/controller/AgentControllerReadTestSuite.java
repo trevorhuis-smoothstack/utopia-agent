@@ -8,8 +8,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,7 +18,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ss.training.utopia.agent.entity.Airport;
 import com.ss.training.utopia.agent.entity.Booking;
-import com.ss.training.utopia.agent.entity.Flight;
 import com.ss.training.utopia.agent.service.AgentBookingService;
 import com.ss.training.utopia.agent.service.AgentCancelService;
 import com.ss.training.utopia.agent.service.AgentReadService;
@@ -57,19 +54,6 @@ public class AgentControllerReadTestSuite {
         mvc.perform(get(uri)).andExpect(status().isInternalServerError()).andExpect(content().string(""));
     }
     
-    @Test
-	public void getBookableFlightsTest() throws Exception {
-		final Long HOUR = 3_600_000l;
-		Long departId = 4l, arriveId = 2l, now = Instant.now().toEpochMilli();
-		Timestamp futureOne = new Timestamp(now + HOUR), futureTwo = new Timestamp(now + 2 * HOUR);
-		Flight[] flights = { new Flight(departId, arriveId, futureOne, 3l, (short) 8, 150f),
-				new Flight(departId, arriveId, futureTwo, 7l, (short) 5, 151f) };
-		String uri = "/agent/flights", expectedContent = mapper.writeValueAsString(flights);
-		when(readService.readAvailableFlights()).thenReturn(flights, new Flight[0], null);
-		mvc.perform(get(uri)).andExpect(status().isOk()).andExpect(content().string(expectedContent));
-        mvc.perform(get(uri)).andExpect(status().isNoContent()).andExpect(content().string("[]"));
-        mvc.perform(get(uri)).andExpect(status().isInternalServerError()).andExpect(content().string(""));
-    }
     
     @Test
 	public void getAgentBookings() throws Exception {
