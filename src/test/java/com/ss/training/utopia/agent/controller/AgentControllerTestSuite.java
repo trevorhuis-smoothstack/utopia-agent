@@ -1,10 +1,10 @@
 package com.ss.training.utopia.agent.controller;
 
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
-@WebMvcTest(AgentController.class)
-@AutoConfigureMockMvc(addFilters = false)
+@RunWith(Suite.class)
+@SuiteClasses({AgentControllerUserTestSuite.class,AgentControllerReadTestSuite.class,AgentControllerCancelTestSuite.class,AgentControllerBookingTestSuite.class})
 public class AgentControllerTestSuite {
-
 }

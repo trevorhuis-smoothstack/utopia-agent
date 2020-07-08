@@ -1,7 +1,5 @@
 package com.ss.training.utopia.agent.controller;
 
-import java.util.List;
-
 import com.ss.training.utopia.agent.entity.Airport;
 import com.ss.training.utopia.agent.entity.Booking;
 import com.ss.training.utopia.agent.entity.Flight;
@@ -40,15 +38,26 @@ public class AgentController {
 
     @GetMapping(path="/airports")
     public ResponseEntity<Airport[]> getAllAirports() {
-		List<Airport> airportList = null;
 		Airport[] airportArray = null;
 		HttpStatus status = HttpStatus.OK;
-		airportList = readService.readAirports();
-		if (airportList.size() == 0) // no airports exist in the database
+		airportArray = readService.readAirports();
+		if (airportArray == null)
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		else if (airportArray.length == 0) // no airports exist in the database
 			status = HttpStatus.NO_CONTENT;
-		else
-        airportArray = airportList.toArray(new Airport[airportList.size()]);
 		return new ResponseEntity<Airport[]>(airportArray, status);
+	}
+
+	@GetMapping(path="/flights")
+    public ResponseEntity<Flight[]> getAllAvailableFlights() {
+		Flight[] flightArray = null;
+		HttpStatus status = HttpStatus.OK;
+		flightArray = readService.readAvailableFlights();
+		if (flightArray == null)
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		else if (flightArray.length == 0) // no flights exist in the database
+			status = HttpStatus.NO_CONTENT;
+		return new ResponseEntity<Flight[]>(flightArray, status);
 	}
 
 	@PostMapping(path = "/booking")
@@ -76,16 +85,13 @@ public class AgentController {
 
 	@GetMapping(path = "/bookings/{agentId}")
 	public ResponseEntity<Booking[]> getAllBookingsByAgent(@PathVariable long agentId) {
-		List<Booking> bookingList = null;
 		Booking[] bookingArray = null;
 		HttpStatus status = HttpStatus.OK;
-		bookingList = readService.readAgentBookings(agentId);
-		if (bookingList == null)
+		bookingArray = readService.readAgentBookings(agentId);
+		if (bookingArray == null)
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		else if (bookingList.size() == 0) // no bookings exist in the database
+		else if (bookingArray.length == 0) // no bookings exist in the database
 			status = HttpStatus.NO_CONTENT;
-		else
-			bookingArray = bookingList.toArray(new Booking[bookingList.size()]);
 		return new ResponseEntity<Booking[]>(bookingArray, status);
 	}
 
@@ -118,21 +124,6 @@ public class AgentController {
 		}
 		
 		return new ResponseEntity<Booking>(booking, status);
-	}
-
-	@GetMapping(path="/flights")
-    public ResponseEntity<Flight[]> getAllAvailableFlights() {
-		List<Flight> flightList = null;
-		Flight[] flightArray = null;
-		HttpStatus status = HttpStatus.OK;
-		flightList = readService.readAvailableFlights();
-		if (flightList == null)
-			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		else if (flightList.size() == 0) // no flights exist in the database
-			status = HttpStatus.NO_CONTENT;
-		else
-        	flightArray = flightList.toArray(new Flight[flightList.size()]);
-		return new ResponseEntity<Flight[]>(flightArray, status);
 	}
 
 	@GetMapping(path = "/user/username/{username}")

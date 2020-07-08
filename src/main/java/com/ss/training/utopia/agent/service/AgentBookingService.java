@@ -77,8 +77,7 @@ public class AgentBookingService {
 		if (flight.getSeatsAvailable() < 1)
             return "Flight Full";
 
-        Charge charge = stripePurchase(booking);
-        booking.setStripeId(charge.getId());    
+        booking.setStripeId(stripePurchase(booking));    
 
         bookingDAO.save(booking);  
 
@@ -89,19 +88,23 @@ public class AgentBookingService {
         return "Flight Booked";
     }
   
-    public Charge stripePurchase(Booking booking) throws AuthenticationException, InvalidRequestException,
+    public String stripePurchase(Booking booking) throws AuthenticationException, InvalidRequestException,
     APIConnectionException, CardException, APIException {
         
         Integer flightPrice = (int) (flightDAO.findByFlightId(booking.getFlightId()).getPrice() * 100);
-
-        Stripe.apiKey = stripeKey;
 
         Map<String, Object> params = new HashMap<>();
         params.put("amount", flightPrice);
         params.put("currency", "usd");
         params.put("source", booking.getStripeId());
 
+        return stripeCharge(params);
+    }
+
+    public String stripeCharge(Map<String, Object> params) throws AuthenticationException, InvalidRequestException,
+            APIConnectionException, CardException, APIException {
+        Stripe.apiKey = stripeKey;
         Charge charge = Charge.create(params);
-        return charge;
+        return charge.getId();
     }
 }

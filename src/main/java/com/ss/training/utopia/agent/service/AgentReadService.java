@@ -21,11 +21,14 @@ import com.ss.training.utopia.agent.entity.Flight;
 @Component
 public class AgentReadService {
 
-    @Autowired BookingDAO bookingDAO;
+    @Autowired
+    BookingDAO bookingDAO;
 
-    @Autowired AirportDAO airportDAO;
+    @Autowired
+    AirportDAO airportDAO;
 
-    @Autowired FlightDAO flightDAO;
+    @Autowired
+    FlightDAO flightDAO;
 
     public Flight readFlight(Long flightId) {
         try {
@@ -35,21 +38,21 @@ public class AgentReadService {
             return null;
         }
     }
-    
-    public List<Flight> readAvailableFlights() {
+
+    public Flight[] readAvailableFlights() {
         try {
             List<Flight> flights = flightDAO.findAvailable();
-            return flights;
+            return flights.toArray(new Flight[flights.size()]);
         } catch (Throwable t) {
             return null;
         }
     }
 
-    public List<Airport> readAirports() {
+    public Airport[] readAirports() {
         try {
             List<Airport> airports = airportDAO.findAll();
-            return airports;
-                  } catch (Throwable t) {
+		    return airports.toArray(new Airport[airports.size()]);
+        } catch (Throwable t) {
             return null;
         }
     }
@@ -59,10 +62,10 @@ public class AgentReadService {
      * @param bookerId
      * @return
      */
-    public List<Booking> readAgentBookings(Long bookerId) {
+    public Booking[] readAgentBookings(Long bookerId) {
         try {
             List<Booking> bookings = bookingDAO.findByBookerId(bookerId);
-            return bookings;
+            return bookings.toArray(new Booking[bookings.size()]);
         } catch (Throwable t) {
             return null;
         }
