@@ -20,7 +20,7 @@ public interface BookingDAO extends JpaRepository<Booking, BookingPk> {
         nativeQuery = true)
     public List<Booking> findCancellable(Long agentId);
 
-    List<Booking> findByTravelerIdAndFlightId(Long travelerId, Long flightId);
+    Booking findByTravelerIdAndFlightId(Long travelerId, Long flightId);
 
 	List<Booking> findByBookerId(Long bookerId);
 

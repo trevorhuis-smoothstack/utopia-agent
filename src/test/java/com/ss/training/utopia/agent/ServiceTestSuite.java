@@ -11,7 +11,7 @@ import com.ss.training.utopia.agent.dao.BookingDAO;
 import com.ss.training.utopia.agent.dao.FlightDAO;
 import com.ss.training.utopia.agent.entity.Booking;
 import com.ss.training.utopia.agent.entity.Flight;
-import com.ss.training.utopia.agent.service.AgentService;
+import com.ss.training.utopia.agent.service.AgentReadService;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,39 +26,14 @@ H2TestProfileJPAConfig.class})
 @ActiveProfiles("test")
 public class ServiceTestSuite {
     
-    @Autowired private BookingDAO bookingDAO;
+    @Autowired BookingDAO bookingDAO;
     
-    @Autowired private FlightDAO flightDAO;
+    @Autowired FlightDAO flightDAO;
 
-    @Autowired private AgentService service;
+    @Autowired AgentReadService readService;
     
+
     @Test
-	public void createBooking() {
-        //Longs
-        Long oneLong = (long) 1;
-        Long twoLong = (long) 2;
-
-        // Times
-        final Long HOUR = (long) 3_600_000;
-        Long now = Instant.now().toEpochMilli();
-        Timestamp future = new Timestamp(now + HOUR);
-
-        // Future flight and booking - Booker ID: 1, only cancellable flight by user 1
-        Flight flight = new Flight(oneLong, twoLong, future, oneLong, null, null);
-        Booking newBooking = new Booking(oneLong, oneLong, oneLong, true, null);
-
-        flightDAO.save(flight);
-
-        List<Booking> foundBookings;
-        foundBookings = bookingDAO.findCancellable(oneLong);
-		assertEquals(foundBookings.size(), 0);
-
-        service.createBooking(newBooking);
-
-        foundBookings = bookingDAO.findCancellable(oneLong);
-		assertEquals(foundBookings.size(), 1);
-    }
-
 	public void readBookingsByAgent() {
         Booking bookingByAgent = new Booking((long) 1, (long) 1, (long) 1, true, null);
         Booking bookingByAgent2 = new Booking((long) 2, (long) 1, (long) 1, true, null);
@@ -68,7 +43,7 @@ public class ServiceTestSuite {
         bookingDAO.save(bookingByAgent2);
         bookingDAO.save(bookingNotByAgent);
 
-        List<Booking> bookingsByAgent = service.readAgentBookings((long) 1);
+        List<Booking> bookingsByAgent = readService.readAgentBookings((long) 1);
 
         assertEquals(bookingsByAgent.size(), 2);
     }
@@ -76,41 +51,9 @@ public class ServiceTestSuite {
     @Test
 	public void readBookingsByAgentNoBookings() {
 
-        List<Booking> bookingsByAgent = service.readAgentBookings((long) 1);
+        List<Booking> bookingsByAgent = readService.readAgentBookings((long) 1);
 
         assertEquals(bookingsByAgent.size(), 0);
-    }
-
-    @Test
-	public void cancelBooking() {
-        //Longs
-        Long oneLong = (long) 1;
-        Long twoLong = (long) 2;
-
-        // Times
-        final Long HOUR = (long) 3_600_000;
-        Long now = Instant.now().toEpochMilli();
-        Timestamp future = new Timestamp(now + HOUR);
-
-        // Future flight and booking - Booker ID: 1, only cancellable flight by user 1
-        Flight futureFlight = new Flight(oneLong, twoLong, future, oneLong, null, null);
-        Booking cancellableBooking = new Booking(oneLong, oneLong, oneLong, true, null);
-
-        flightDAO.save(futureFlight);
-        bookingDAO.save(cancellableBooking);
-
-        List<Booking> foundBookings;
-        foundBookings = bookingDAO.findCancellable(oneLong);
-		assertEquals(foundBookings.size(), 1);
-
-        service.cancelBooking(cancellableBooking);
-        
-        Booking cancelledBooking = bookingDAO.findAll().get(0);
-        assertEquals(cancelledBooking.getActive(), false);
-
-
-        foundBookings = bookingDAO.findCancellable(oneLong);
-		assertEquals(foundBookings.size(), 0);
     }
 
     @Test
@@ -137,7 +80,7 @@ public class ServiceTestSuite {
        flightDAO.save(otherFutureFlight);
        flightDAO.save(otherFutureFlightNoSeats);
 
-       List<Flight> flights = service.readAvailableFlights();
+       List<Flight> flights = readService.readAvailableFlights();
 
         assertEquals(flights.size(), 2);
         assertEquals( flights.get(0).getDepartId(), twoLong);
@@ -149,7 +92,7 @@ public class ServiceTestSuite {
     @Test
 	public void readNoAvailableFlights() {
 
-        List<Flight> flights = service.readAvailableFlights();
+        List<Flight> flights = readService.readAvailableFlights();
 
         assertEquals(flights.size(), 0);
     }
