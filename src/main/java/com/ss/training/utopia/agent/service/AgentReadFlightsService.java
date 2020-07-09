@@ -18,21 +18,6 @@ public class AgentReadFlightsService {
     FlightDAO flightDAO;
 
     public Flight[] readAvailableFlights(FlightQuery fq) {
-        if (fq.getDepartId() == null)
-            fq.setDepartId("");
-        
-        if (fq.getArriveId() == null) 
-            fq.setArriveId("");
-        
-        if (fq.getDateBegin() == null) 
-            fq.setDateBegin("1900-01-01");
-        
-        if (fq.getDateEnd() == null) 
-            fq.setDateEnd("2100-01-01");
-        
-        if (fq.getPrice() == null)
-            fq.setPrice(100f);
-
         try {
             List<Flight> flights = flightDAO.findAvailable(fq.getDepartId(), fq.getArriveId(), fq.getPrice(), fq.getDateBegin(), fq.getDateEnd());
             return flights.toArray(new Flight[flights.size()]);
@@ -41,6 +26,13 @@ public class AgentReadFlightsService {
         }
     }
 
-    //List<Flight> flights = flightDAO.findAvailable(fq.getDepartId(), fq.getArriveId(), fq.getPrice(), fq.getDateBegin(), fq.getDateEnd());
+    public Flight[] readPremierFlights() {
+        try {
+            List<Flight> flights = flightDAO.findPremier();
+            return flights.toArray(new Flight[flights.size()]);
+        } catch (Throwable t) {
+            return null;
+        }
+    }
 
 }

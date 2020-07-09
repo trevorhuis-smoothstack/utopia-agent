@@ -1,12 +1,10 @@
 package com.ss.training.utopia.agent.dao;
 
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.List;
 
 import com.ss.training.utopia.agent.AgentApplication;
 import com.ss.training.utopia.agent.H2TestProfileJPAConfig;

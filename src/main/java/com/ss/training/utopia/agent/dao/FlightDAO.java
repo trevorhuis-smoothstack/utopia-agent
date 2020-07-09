@@ -1,6 +1,5 @@
 package com.ss.training.utopia.agent.dao;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import com.ss.training.utopia.agent.entity.Flight;
@@ -19,9 +18,9 @@ public interface FlightDAO extends JpaRepository<Flight, FlightPk> {
     Flight findByFlightId(Long flightId);
 
     @Query(
-        value = "SELECT * FROM tbl_flight f WHERE f.seatsAvailable > 0 AND f.departTime > CURRENT_TIMESTAMP", 
+        value = "SELECT * FROM tbl_flight f WHERE f.seatsAvailable > 0 AND f.price > 90 AND f.departTime > CURRENT_TIMESTAMP", 
         nativeQuery = true)
-    public List<Flight> findAvailable();
+    public List<Flight> findPremier();
     
     @Query(
         value = "SELECT * FROM tbl_flight f WHERE f.seatsAvailable > 0 " + 
@@ -31,9 +30,6 @@ public interface FlightDAO extends JpaRepository<Flight, FlightPk> {
         "AND f.departTime BETWEEN STR_TO_DATE(?4, '%Y-%m-%d %h:%i') AND STR_TO_DATE(?5, '%Y-%m-%d %h:%i');", 
         nativeQuery = true)
     public List<Flight> findAvailable(String departId, String arriveId, Float price, String dateBegin, String dateEnd);
-
-    // public List<Flight> findAvailable(String departId, String arriveId, Float price, Timestamp dateBegin, Timestamp dateEnd);
-    // value = "SELECT * FROM tbl_flight f WHERE f.seatsAvailable > 0 AND WHERE f.departId LIKE ?1 AND f.departTime BETWEEN ?4 AND ?5",
 
     @Query(value = "SELECT * FROM tbl_flight f where f.flightId IN (SELECT b.flightId FROM tbl_booking b WHERE b.bookerId = ?1 AND b.travelerId = ?2 AND b.active = true)",
         nativeQuery = true)
