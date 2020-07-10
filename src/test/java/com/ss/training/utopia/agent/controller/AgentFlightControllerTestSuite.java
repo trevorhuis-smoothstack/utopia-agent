@@ -1,5 +1,6 @@
 package com.ss.training.utopia.agent.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
@@ -12,21 +13,13 @@ import java.sql.Timestamp;
 import java.time.Instant;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ss.training.utopia.agent.entity.Airport;
 import com.ss.training.utopia.agent.entity.Flight;
 import com.ss.training.utopia.agent.entity.FlightQuery;
-import com.ss.training.utopia.agent.service.AgentBookingService;
-import com.ss.training.utopia.agent.service.AgentCancelService;
 import com.ss.training.utopia.agent.service.AgentReadFlightsService;
-import com.ss.training.utopia.agent.service.AgentReadService;
-import com.ss.training.utopia.agent.service.UserService;
 
 @WebMvcTest(AgentFlightController.class)
 @AutoConfigureMockMvc(addFilters = false)
