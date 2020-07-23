@@ -25,7 +25,6 @@ import com.stripe.model.Charge;
 /**
  * @author Trevor Huis in 't Veld
  */
-@PropertySource("classpath:api.properties")
 @Component
 public class AgentBookingService {
 

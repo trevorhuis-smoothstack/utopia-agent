@@ -24,7 +24,6 @@ import com.stripe.model.Refund;
 /**
  * @author Trevor Huis in 't Veld
  */
-@PropertySource("classpath:api.properties")
 @Component
 public class AgentCancelService {
 
