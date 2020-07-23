@@ -1,4 +1,4 @@
-package com.ss.training.utopia.entity;
+package com.ss.training.utopia.agent.entity;
 
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -10,45 +10,63 @@ import javax.persistence.Table;
  * @author Trevor Huis in 't Veld
  */
 @Entity
-@Table(name="tbl_aiport")
+@Table(name="tbl_airport")
 public class Airport implements Serializable {
-    
-    /**
-	 *  
+ 
+
+	/**
+	 *
 	 */
-	private static final long serialVersionUID = 2302957380915149824L;
+	private static final long serialVersionUID = 3071310522090611039L;
 
 	@Id
-    @Column(name="airportId")
-    private Integer airportId;
+	@Column
+	private Long airportId;
 
-    @Id
-    @Column(name="city")
-    private String city;
+	@Column
+	private String name;
 
-    public Integer getAirportId() {
+	/**
+	 * 
+	 */
+	public Airport() {
+	}
+
+	/**
+	 * @param airportId
+	 * @param name
+	 */
+	public Airport(Long airportId, String name) {
+		this.airportId = airportId;
+		this.name = name;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return the airportId
+	 */
+	public Long getAirportId() {
 		return airportId;
 	}
 
-	public void setAirportId(Integer airportId) {
-		this.airportId = airportId;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-    }
-    
-    
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((airportId == null) ? 0 : airportId.hashCode());
-		result = prime * result + ((city == null) ? 0 : city.hashCode());
 		return result;
 	}
 
@@ -66,11 +84,7 @@ public class Airport implements Serializable {
 				return false;
 		} else if (!airportId.equals(other.airportId))
 			return false;
-		if (city == null) {
-			if (other.city != null)
-				return false;
-		} else if (!city.equals(other.city))
-			return false;
 		return true;
 	}
+
 }
