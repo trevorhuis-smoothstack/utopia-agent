@@ -8,7 +8,6 @@ import com.ss.training.utopia.agent.dao.BookingDAO;
 import com.ss.training.utopia.agent.dao.FlightDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,9 +28,6 @@ import com.stripe.model.Charge;
 @PropertySource("classpath:api.properties")
 @Component
 public class AgentBookingService {
-    
-    @Value("${STRIPE_API_SECRET}")
-    private String stripeKey;
 
     @Autowired BookingDAO bookingDAO;
 
@@ -103,7 +99,7 @@ public class AgentBookingService {
 
     public String stripeCharge(Map<String, Object> params) throws AuthenticationException, InvalidRequestException,
             APIConnectionException, CardException, APIException {
-        Stripe.apiKey = stripeKey;
+        Stripe.apiKey = System.getenv("STRIPE_KEY");
         Charge charge = Charge.create(params);
         return charge.getId();
     }

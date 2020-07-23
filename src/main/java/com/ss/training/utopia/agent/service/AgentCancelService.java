@@ -7,7 +7,6 @@ import com.ss.training.utopia.agent.dao.BookingDAO;
 import com.ss.training.utopia.agent.dao.FlightDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,9 +27,6 @@ import com.stripe.model.Refund;
 @PropertySource("classpath:api.properties")
 @Component
 public class AgentCancelService {
-
-    @Value("${STRIPE_API_SECRET}")
-    private String stripeKey;
 
     @Autowired BookingDAO bookingDAO;
 
@@ -96,7 +92,7 @@ public class AgentCancelService {
     public void stripeRefund(Booking booking) throws AuthenticationException, InvalidRequestException,
             APIConnectionException, CardException, APIException {
         
-        Stripe.apiKey = stripeKey;
+        Stripe.apiKey = System.getenv("STRIPE_KEY");
 
 		Map<String, Object> params = new HashMap<>();
             params.put(
