@@ -24,17 +24,9 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.test.context.TestPropertySource;
 
 @RunWith(MockitoJUnitRunner.class)
-@TestPropertySource(properties = {
-    "STRIPE_API_SECRET=testValue",
-})
 public class BookingServiceTestSuite {
-	
-	@Value("${STRIPE_API_SECRET}")
-    private String stripeKey;
 
     @Mock
     FlightDAO flightDAO;
