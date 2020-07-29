@@ -6,9 +6,9 @@ import java.util.Map;
 import com.ss.training.utopia.agent.dao.AirportDAO;
 import com.ss.training.utopia.agent.dao.BookingDAO;
 import com.ss.training.utopia.agent.dao.FlightDAO;
+import com.ss.training.utopia.agent.dao.StripeDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +20,6 @@ import com.stripe.exception.APIException;
 import com.stripe.exception.AuthenticationException;
 import com.stripe.exception.CardException;
 import com.stripe.exception.InvalidRequestException;
-import com.stripe.model.Charge;
 
 /**
  * @author Trevor Huis in 't Veld
@@ -33,6 +32,8 @@ public class AgentBookingService {
     @Autowired AirportDAO airportDAO;
 
     @Autowired FlightDAO flightDAO;
+    
+    @Autowired StripeDAO stripeDAO;
 
     /**
      * 
@@ -83,6 +84,16 @@ public class AgentBookingService {
         return "Flight Booked";
     }
   
+    /**
+     * 
+     * @param booking
+     * @return
+     * @throws AuthenticationException
+     * @throws InvalidRequestException
+     * @throws APIConnectionException
+     * @throws CardException
+     * @throws APIException
+     */
     public String stripePurchase(Booking booking) throws AuthenticationException, InvalidRequestException,
     APIConnectionException, CardException, APIException {
         
@@ -93,13 +104,6 @@ public class AgentBookingService {
         params.put("currency", "usd");
         params.put("source", booking.getStripeId());
 
-        return stripeCharge(params);
-    }
-
-    public String stripeCharge(Map<String, Object> params) throws AuthenticationException, InvalidRequestException,
-            APIConnectionException, CardException, APIException {
-        Stripe.apiKey = System.getenv("STRIPE_KEY");
-        Charge charge = Charge.create(params);
-        return charge.getId();
+        return stripeDAO.stripeCharge(params);
     }
 }

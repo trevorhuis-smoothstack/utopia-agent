@@ -11,8 +11,7 @@ import com.stripe.exception.AuthenticationException;
 import com.stripe.exception.CardException;
 import com.stripe.exception.InvalidRequestException;
 
-// import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Test;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -72,7 +71,6 @@ public class CancelServiceTestSuite {
         Flight flight = new Flight(1l, 1l, null, 1l, (short) 5, 10f);
         
         Mockito.when(flightDAO.findByFlightId(booking.getFlightId())).thenReturn(flight);  
-//        Mockito.doNothing.when(service).stripePurchase(booking);
         String cancelBookingResult = service.cancelBookingTransaction(booking);
 
         assertEquals(cancelBookingResult, "Flight Cancelled");

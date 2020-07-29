@@ -1,25 +1,20 @@
 package com.ss.training.utopia.agent.service;
-import java.util.HashMap;
-import java.util.Map;
 
-import com.ss.training.utopia.agent.dao.AirportDAO;
 import com.ss.training.utopia.agent.dao.BookingDAO;
 import com.ss.training.utopia.agent.dao.FlightDAO;
+import com.ss.training.utopia.agent.dao.StripeDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ss.training.utopia.agent.entity.Booking;
 import com.ss.training.utopia.agent.entity.Flight;
-import com.stripe.Stripe;
 import com.stripe.exception.APIConnectionException;
 import com.stripe.exception.APIException;
 import com.stripe.exception.AuthenticationException;
 import com.stripe.exception.CardException;
 import com.stripe.exception.InvalidRequestException;
-import com.stripe.model.Refund;
 
 /**
  * @author Trevor Huis in 't Veld
@@ -29,9 +24,9 @@ public class AgentCancelService {
 
     @Autowired BookingDAO bookingDAO;
 
-    @Autowired AirportDAO airportDAO;
-
     @Autowired FlightDAO flightDAO;
+
+    @Autowired StripeDAO stripeDAO;
 
     public String cancelBooking(Booking booking) {
         try {
@@ -62,7 +57,7 @@ public class AgentCancelService {
 
         booking.setStripeId(stripeId);        
                 
-        stripeRefund(booking);
+        stripeDAO.stripeRefund(booking);
 
         booking.setActive(false);
         bookingDAO.save(booking);
@@ -78,27 +73,5 @@ public class AgentCancelService {
         return "Flight Cancelled";
     }
 
-    /**
-     * 
-     * @param booking
-     * @return
-     * @throws AuthenticationException
-     * @throws InvalidRequestException
-     * @throws APIConnectionException
-     * @throws CardException
-     * @throws APIException
-     */
-    public void stripeRefund(Booking booking) throws AuthenticationException, InvalidRequestException,
-            APIConnectionException, CardException, APIException {
-        
-        Stripe.apiKey = System.getenv("STRIPE_KEY");
-
-		Map<String, Object> params = new HashMap<>();
-            params.put(
-            "charge",
-            booking.getStripeId()
-            );
-
-        Refund.create(params);
-    }
+   
 }
