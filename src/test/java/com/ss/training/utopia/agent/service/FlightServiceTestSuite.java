@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,8 +79,11 @@ public class FlightServiceTestSuite {
         final Long HOUR = (long) 3_600_000;
         Long now = Instant.now().toEpochMilli();
         Timestamp future = new Timestamp(now + HOUR);
+        LocalDate today = LocalDate.now();
+        String todaysDate = today.toString();
+        String dateBegin = todaysDate;
 
-        FlightQuery fq = new FlightQuery("", "", "1900-01-01", "2100-01-01", 100.0f);
+        FlightQuery fq = new FlightQuery("", "", dateBegin, "2100-01-01", 100.0f);
 
         Flight flightOne = new Flight(2l, 2l, future, 1l, (short) 5, 35.0f);
         Flight flightTwo = new Flight(1l, 2l, future, 2l, (short) 5, 52.0f);
@@ -88,7 +92,7 @@ public class FlightServiceTestSuite {
         flights.add(flightOne);
         flights.add(flightTwo);
 
-        Mockito.when(flightDAO.findAvailable("", "", 100.0f, "1900-01-01", "2100-01-01")).thenReturn(flights);
+        Mockito.when(flightDAO.findAvailable("", "", 100.0f, dateBegin, "2100-01-01")).thenReturn(flights);
 
         Flight[] foundFlights = service.readAvailableFlights(fq);
 
@@ -97,8 +101,12 @@ public class FlightServiceTestSuite {
 
     @Test
     public void readFlightsTestException() {
-        FlightQuery fq = new FlightQuery("", "", "1900-01-01", "2100-01-01", 100.0f);
-        Mockito.doThrow(NullPointerException.class).when(flightDAO).findAvailable("", "", 100.0f, "1900-01-01", "2100-01-01");
+        LocalDate today = LocalDate.now();
+        String todaysDate = today.toString();
+        String dateBegin = todaysDate;
+
+        FlightQuery fq = new FlightQuery("", "", dateBegin, "2100-01-01", 100.0f);
+        Mockito.doThrow(NullPointerException.class).when(flightDAO).findAvailable("", "", 100.0f, dateBegin, "2100-01-01");
         Flight[] foundFlights = service.readAvailableFlights(fq);
     	assertEquals(foundFlights, null);
     }

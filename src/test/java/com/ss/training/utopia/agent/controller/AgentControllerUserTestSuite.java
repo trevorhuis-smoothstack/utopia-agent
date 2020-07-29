@@ -18,12 +18,9 @@ import org.springframework.http.MediaType;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ss.training.utopia.agent.entity.User;
-import com.ss.training.utopia.agent.service.AgentBookingService;
-import com.ss.training.utopia.agent.service.AgentCancelService;
-import com.ss.training.utopia.agent.service.AgentReadService;
 import com.ss.training.utopia.agent.service.UserService;
 
-@WebMvcTest(AgentController.class)
+@WebMvcTest(AgentUserController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class AgentControllerUserTestSuite {
 
@@ -31,18 +28,10 @@ public class AgentControllerUserTestSuite {
 	private MockMvc mvc;
 	@Autowired
     private ObjectMapper mapper;
-    
-    @MockBean 
-    AgentBookingService bookingService;
-
-    @MockBean 
-    AgentCancelService cancelService;
 
 	@MockBean
     private UserService userService;
     
-    @MockBean
-	private AgentReadService readService;
 
 	@Test
 	public void userIsTravelerTest() throws Exception {
