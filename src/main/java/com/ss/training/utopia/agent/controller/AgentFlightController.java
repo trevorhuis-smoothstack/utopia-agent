@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import java.time.LocalDate;
 
 /**
  * @author Trevor Huis in 't Veld
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/agent")
 public class AgentFlightController {
-
+	
 	@Autowired
 	AgentReadFlightsService service;
 
@@ -26,8 +27,13 @@ public class AgentFlightController {
 	public ResponseEntity<Flight[]> getAllAvailableFlights(@RequestParam() Float price,
 			@RequestParam(required = false, defaultValue = "") String departId,
 			@RequestParam(required = false, defaultValue = "") String arriveId,
-			@RequestParam(required = false, defaultValue = "1900-01-01") String dateBegin,
+			@RequestParam(required = false, defaultValue = "today") String dateBegin,
 			@RequestParam(required = false, defaultValue = "2100-01-01") String dateEnd) {
+		if(dateBegin.equals("today")) {
+			LocalDate today = LocalDate.now();
+			String todaysDate = today.toString();
+			dateBegin = todaysDate;
+		}
 		FlightQuery fq = new FlightQuery(departId, arriveId, dateBegin, dateEnd, price);
 		Flight[] flightArray = null;
 		HttpStatus status = HttpStatus.OK;
