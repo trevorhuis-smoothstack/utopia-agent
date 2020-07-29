@@ -23,7 +23,8 @@ import java.time.LocalDate;
 @RequestMapping(path = "/agent")
 public class AgentFlightController {
 
-	@Autowired AgentReadService readService;
+	@Autowired
+	AgentReadService readService;
 	
 	@Autowired
 	AgentReadFlightsService flightService;
@@ -34,18 +35,21 @@ public class AgentFlightController {
 			@RequestParam(required = false, defaultValue = "") String arriveId,
 			@RequestParam(required = false, defaultValue = "today") String dateBegin,
 			@RequestParam(required = false, defaultValue = "2100-01-01") String dateEnd) {
+
 		if(dateBegin.equals("today")) {
 			LocalDate today = LocalDate.now();
 			String todaysDate = today.toString();
 			dateBegin = todaysDate;
 		}
+
 		FlightQuery fq = new FlightQuery(departId, arriveId, dateBegin, dateEnd, price);
 		Flight[] flightArray = null;
-		HttpStatus status = HttpStatus.OK;
 		flightArray = flightService.readAvailableFlights(fq);
+
+		HttpStatus status = HttpStatus.OK;
 		if (flightArray == null)
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
-		else if (flightArray.length == 0) // no flights exist in the database
+		else if (flightArray.length == 0) // no flights with that criteria exist in the database
 			status = HttpStatus.NO_CONTENT;
 		return new ResponseEntity<Flight[]>(flightArray, status);
 	}

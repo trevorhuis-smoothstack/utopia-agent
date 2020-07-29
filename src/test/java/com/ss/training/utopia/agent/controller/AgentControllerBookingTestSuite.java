@@ -17,8 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ss.training.utopia.agent.entity.Booking;
 import com.ss.training.utopia.agent.service.AgentBookingService;
 import com.ss.training.utopia.agent.service.AgentCancelService;
-import com.ss.training.utopia.agent.service.AgentReadService;
-import com.ss.training.utopia.agent.service.UserService;
+
 /**
  * @author Trevor Huis in 't Veld
  */
