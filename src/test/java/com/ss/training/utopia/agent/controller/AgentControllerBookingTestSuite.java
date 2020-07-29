@@ -22,7 +22,7 @@ import com.ss.training.utopia.agent.service.UserService;
 /**
  * @author Trevor Huis in 't Veld
  */
-@WebMvcTest(AgentController.class)
+@WebMvcTest(AgentBookingController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class AgentControllerBookingTestSuite {
 
@@ -36,12 +36,6 @@ public class AgentControllerBookingTestSuite {
 
     @MockBean 
     AgentCancelService cancelService;
-
-	@MockBean
-    private UserService userService;
-    
-    @MockBean
-	private AgentReadService readService;
     
     @Test
 	public void bookFlightTest() throws Exception {

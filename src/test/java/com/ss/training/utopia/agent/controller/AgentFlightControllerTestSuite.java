@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ss.training.utopia.agent.entity.Flight;
 import com.ss.training.utopia.agent.entity.FlightQuery;
 import com.ss.training.utopia.agent.service.AgentReadFlightsService;
+import com.ss.training.utopia.agent.service.AgentReadService;
 
 @WebMvcTest(AgentFlightController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -34,6 +35,9 @@ public class AgentFlightControllerTestSuite {
 
     @MockBean
     private AgentReadFlightsService service;
+    
+    @MockBean
+	private AgentReadService readService;
 
     @Test
     public void readPremierFlights() throws Exception {
