@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.ss.training.utopia.agent.dao.BookingDAO;
 import com.ss.training.utopia.agent.dao.FlightDAO;
+import com.ss.training.utopia.agent.dao.StripeDAO;
 import com.ss.training.utopia.agent.entity.Booking;
 import com.ss.training.utopia.agent.entity.Flight;
 import com.stripe.exception.APIConnectionException;
@@ -24,23 +25,18 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.test.context.TestPropertySource;
 
 @RunWith(MockitoJUnitRunner.class)
-@TestPropertySource(properties = {
-    "STRIPE_API_SECRET=testValue",
-})
-public class BookingServiceTestSuite {
-	
-	@Value("${STRIPE_API_SECRET}")
-    private String stripeKey;
+public class BookingServiceTests {
 
     @Mock
     FlightDAO flightDAO;
 
     @Mock
     BookingDAO bookingDAO;
+
+    @Mock
+    StripeDAO stripeDAO;
 
     @InjectMocks
     @Spy
@@ -119,7 +115,7 @@ public class BookingServiceTestSuite {
         params.put("source", booking.getStripeId());
 
         Mockito.when(flightDAO.findByFlightId(booking.getFlightId())).thenReturn(flight);
-        Mockito.doReturn("token").when(service).stripeCharge(params);
+        Mockito.doReturn("token").when(stripeDAO).stripeCharge(params);
         
         String stripeToken = service.stripePurchase(booking);
         
