@@ -27,7 +27,7 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BookingServiceTestSuite {
+public class BookingServiceTests {
 
     @Mock
     FlightDAO flightDAO;

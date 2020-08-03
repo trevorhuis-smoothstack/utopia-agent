@@ -25,7 +25,7 @@ import com.ss.training.utopia.agent.service.AgentReadService;
 
 @WebMvcTest(AgentFlightController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class AgentControllerReadTestSuite {
+public class AgentControllerReadTests {
 
 	@Autowired
 	private MockMvc mvc;

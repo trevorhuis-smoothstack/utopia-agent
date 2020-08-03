@@ -20,7 +20,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
-public class CancelServiceTestSuite {
+public class CancelServiceTests {
 
     @Mock
     FlightDAO flightDAO;

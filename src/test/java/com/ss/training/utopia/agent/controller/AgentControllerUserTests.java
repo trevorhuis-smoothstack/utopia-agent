@@ -22,7 +22,7 @@ import com.ss.training.utopia.agent.service.UserService;
 
 @WebMvcTest(AgentUserController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class AgentControllerUserTestSuite {
+public class AgentControllerUserTests {
 
 	@Autowired
 	private MockMvc mvc;

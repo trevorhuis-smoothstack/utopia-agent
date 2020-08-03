@@ -30,7 +30,7 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest(classes = { AgentApplication.class, H2TestProfileJPAConfig.class })
 @ActiveProfiles("test")
 @RunWith(MockitoJUnitRunner.class)
-public class FlightServiceTestSuite {
+public class FlightServiceTests {
 
     @Mock
     BookingDAO bookingDAO;
