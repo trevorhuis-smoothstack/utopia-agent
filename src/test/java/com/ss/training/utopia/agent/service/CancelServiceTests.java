@@ -3,6 +3,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.ss.training.utopia.agent.dao.BookingDAO;
 import com.ss.training.utopia.agent.dao.FlightDAO;
+import com.ss.training.utopia.agent.dao.StripeDAO;
 import com.ss.training.utopia.agent.entity.Booking;
 import com.ss.training.utopia.agent.entity.Flight;
 import com.stripe.exception.APIConnectionException;
@@ -27,6 +28,9 @@ public class CancelServiceTests {
 
     @Mock
     BookingDAO bookingDAO;
+
+    @Mock
+    StripeDAO stripeDAO;
 
     @InjectMocks
     @Spy
@@ -67,15 +71,13 @@ public class CancelServiceTests {
     @Test
     public void cancelBookingTransactionTest() throws AuthenticationException, InvalidRequestException, APIConnectionException,
             CardException, APIException {
-        Booking booking = new Booking(1l, 1l, 1l, true, null);
+        Booking booking = new Booking(1l, 1l, 1l, true, "token");
         Flight flight = new Flight(1l, 1l, null, 1l, (short) 5, 10f);
         
+        Mockito.when(bookingDAO.findByTravelerIdAndFlightId(booking.getTravelerId(), booking.getFlightId())).thenReturn(booking);
         Mockito.when(flightDAO.findByFlightId(booking.getFlightId())).thenReturn(flight);  
         String cancelBookingResult = service.cancelBookingTransaction(booking);
 
         assertEquals(cancelBookingResult, "Flight Cancelled");
     }
-    
-
-    
 }

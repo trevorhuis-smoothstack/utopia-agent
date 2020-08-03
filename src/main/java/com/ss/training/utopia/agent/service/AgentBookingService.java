@@ -104,6 +104,8 @@ public class AgentBookingService {
         params.put("currency", "usd");
         params.put("source", booking.getStripeId());
 
-        return stripeDAO.stripeCharge(params);
+        String stripeToken = stripeDAO.stripeCharge(params);
+
+        return stripeToken;
     }
 }

@@ -108,14 +108,16 @@ public class BookingServiceTests {
 
         Booking booking = new Booking(1l, 1l, 1l, true, "token");
         Flight flight = new Flight(1l, 1l, null, 1l, (short) 5, 10f);
+
+        Integer flightPrice = (int) (flight.getPrice() * 100);
         
         Map<String, Object> params = new HashMap<>();
-        params.put("amount", 10f);
+        params.put("amount", flightPrice);
         params.put("currency", "usd");
         params.put("source", booking.getStripeId());
 
         Mockito.when(flightDAO.findByFlightId(booking.getFlightId())).thenReturn(flight);
-        Mockito.doReturn("token").when(stripeDAO).stripeCharge(params);
+        Mockito.when(stripeDAO.stripeCharge(params)).thenReturn("token");  
         
         String stripeToken = service.stripePurchase(booking);
         
