@@ -6,6 +6,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -23,7 +26,11 @@ public class Booking implements Serializable {
 
     @Id
 	@Column
-	private Long travelerId, flightId;
+	private Long travelerId;
+	
+	@Id
+	@Column
+	private Long flightId;
 
 	@Column
 	private Long bookerId;
@@ -34,6 +41,18 @@ public class Booking implements Serializable {
 	@Column
 	private String stripeId;
 
+	@ManyToOne
+	@JoinColumn(name="flightId")
+	private Flight flight;
+
+	@OneToOne
+	@JoinColumn(name="bookerId")
+	private User booker;
+
+	@OneToOne
+	@JoinColumn(name="travelerId")
+	private User traveler;
+	
 	public Booking() {
 	}
 
