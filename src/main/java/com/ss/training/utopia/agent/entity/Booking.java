@@ -46,11 +46,11 @@ public class Booking implements Serializable {
 	private Flight flight;
 
 	@OneToOne
-	@JoinColumn(name="bookerId")
+	@JoinColumn(name="bookerId", referencedColumnName="userId")
 	private User booker;
 
 	@OneToOne
-	@JoinColumn(name="travelerId")
+	@JoinColumn(name="travelerId", referencedColumnName="userId")
 	private User traveler;
 	
 	public Booking() {
