@@ -17,14 +17,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ss.training.utopia.agent.entity.Booking;
 import com.ss.training.utopia.agent.service.AgentBookingService;
 import com.ss.training.utopia.agent.service.AgentCancelService;
-import com.ss.training.utopia.agent.service.AgentReadService;
-import com.ss.training.utopia.agent.service.UserService;
+
 /**
  * @author Trevor Huis in 't Veld
  */
-@WebMvcTest(AgentController.class)
+@WebMvcTest(AgentBookingController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class AgentControllerBookingTestSuite {
+public class AgentControllerBookingTests {
 
     @Autowired
 	private MockMvc mvc;
@@ -36,12 +35,6 @@ public class AgentControllerBookingTestSuite {
 
     @MockBean 
     AgentCancelService cancelService;
-
-	@MockBean
-    private UserService userService;
-    
-    @MockBean
-	private AgentReadService readService;
     
     @Test
 	public void bookFlightTest() throws Exception {

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.ss.training.utopia.agent.dao.BookingDAO;
 import com.ss.training.utopia.agent.dao.FlightDAO;
+import com.ss.training.utopia.agent.dao.StripeDAO;
 import com.ss.training.utopia.agent.entity.Booking;
 import com.ss.training.utopia.agent.entity.Flight;
 import com.stripe.exception.APIConnectionException;
@@ -26,13 +27,16 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BookingServiceTestSuite {
+public class BookingServiceTests {
 
     @Mock
     FlightDAO flightDAO;
 
     @Mock
     BookingDAO bookingDAO;
+
+    @Mock
+    StripeDAO stripeDAO;
 
     @InjectMocks
     @Spy
@@ -104,14 +108,16 @@ public class BookingServiceTestSuite {
 
         Booking booking = new Booking(1l, 1l, 1l, true, "token");
         Flight flight = new Flight(1l, 1l, null, 1l, (short) 5, 10f);
+
+        Integer flightPrice = (int) (flight.getPrice() * 100);
         
         Map<String, Object> params = new HashMap<>();
-        params.put("amount", 10f);
+        params.put("amount", flightPrice);
         params.put("currency", "usd");
         params.put("source", booking.getStripeId());
 
         Mockito.when(flightDAO.findByFlightId(booking.getFlightId())).thenReturn(flight);
-        Mockito.doReturn("token").when(service).stripeCharge(params);
+        Mockito.when(stripeDAO.stripeCharge(params)).thenReturn("token");  
         
         String stripeToken = service.stripePurchase(booking);
         

@@ -20,28 +20,20 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ss.training.utopia.agent.entity.Airport;
 import com.ss.training.utopia.agent.entity.Flight;
-import com.ss.training.utopia.agent.service.AgentBookingService;
-import com.ss.training.utopia.agent.service.AgentCancelService;
+import com.ss.training.utopia.agent.service.AgentReadFlightsService;
 import com.ss.training.utopia.agent.service.AgentReadService;
-import com.ss.training.utopia.agent.service.UserService;
 
-@WebMvcTest(AgentController.class)
+@WebMvcTest(AgentFlightController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class AgentControllerReadTestSuite {
+public class AgentControllerReadTests {
 
 	@Autowired
 	private MockMvc mvc;
 	@Autowired
     private ObjectMapper mapper;
-    
-    @MockBean 
-    AgentBookingService bookingService;
-
-    @MockBean 
-    AgentCancelService cancelService;
-
+	
 	@MockBean
-    private UserService userService;
+    private AgentReadFlightsService service;
     
     @MockBean
 	private AgentReadService readService;
