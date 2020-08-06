@@ -17,15 +17,8 @@ import org.springframework.stereotype.Repository;
 public interface FlightDAO extends JpaRepository<Flight, FlightPk> {
     Flight findByFlightId(Long flightId);
 
-    // @Query(
-    //     value = "SELECT * FROM tbl_flight f WHERE f.seatsAvailable > 0 AND f.price > 90 AND f.departTime > CURRENT_TIMESTAMP", 
-    //     nativeQuery = true)
-    // public List<Flight> findPremier();
-
-    // Miami flight
-
     @Query(
-        value = "SELECT * FROM tbl_flight f WHERE f.seatsAvailable > 0 AND f.arriveId = 7 AND f.departTime > CURRENT_TIMESTAMP", 
+        value = "SELECT * FROM tbl_flight f WHERE f.seatsAvailable > 0 AND f.price > 90 AND f.departTime > CURRENT_TIMESTAMP", 
         nativeQuery = true)
     public List<Flight> findPremier();
     
