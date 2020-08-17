@@ -1,12 +1,16 @@
 package com.ss.training.utopia.agent.entity;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 /**
  * @author Trevor Huis in 't Veld
@@ -15,13 +19,9 @@ import javax.persistence.Table;
 @Table(name = "tbl_user")
 public class User implements Serializable {
 
+	private static final long serialVersionUID = 1439160334764663455L;
 
-	/**
-     *
-     */
-    private static final long serialVersionUID = -4058241855662882413L;
-
-    @Id
+	@Id
 	@Column
 	@GeneratedValue
 	private Long userId;
@@ -31,6 +31,14 @@ public class User implements Serializable {
 
 	@Column
 	private String name, password, role;
+
+	@JsonBackReference
+	@OneToMany(mappedBy = "traveler")
+	private Set<Booking> bookingsFor;
+
+	@JsonBackReference
+	@OneToMany(mappedBy = "booker")
+	private Set<Booking> bookingsBy;
 
 	/**
 	 * 
@@ -51,6 +59,20 @@ public class User implements Serializable {
 		this.name = name;
 		this.password = password;
 		this.role = role;
+	}
+
+	/**
+	 * @return the bookingsFor
+	 */
+	public Set<Booking> getBookingsFor() {
+		return bookingsFor;
+	}
+
+	/**
+	 * @return the bookingsBy
+	 */
+	public Set<Booking> getBookingsBy() {
+		return bookingsBy;
 	}
 
 	/**

@@ -8,8 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 /**
  * @author Trevor Huis in 't Veld
@@ -19,18 +20,26 @@ import javax.persistence.Table;
 @IdClass(BookingPk.class)
 public class Booking implements Serializable {
 
-	/**
-     *
-     */
-    private static final long serialVersionUID = 9152770559513294559L;
+	private static final long serialVersionUID = -5964334491109305574L;
 
-    @Id
-	@Column
-	private Long travelerId;
-	
 	@Id
 	@Column
-	private Long flightId;
+	private Long travelerId, flightId;
+
+	@ManyToOne
+	@JoinColumn(name = "travelerId", referencedColumnName = "userId", insertable = false, updatable = false)
+	@JsonManagedReference
+	private User traveler;
+
+	@ManyToOne
+	@JoinColumn(name = "flightId", referencedColumnName = "flightId", insertable = false, updatable = false)
+	@JsonManagedReference
+	private Flight flight;
+
+	@ManyToOne
+	@JoinColumn(name = "bookerId", referencedColumnName = "userId", insertable = false, updatable = false)
+	@JsonManagedReference
+	private User booker;
 
 	@Column
 	private Long bookerId;
@@ -41,21 +50,19 @@ public class Booking implements Serializable {
 	@Column
 	private String stripeId;
 
-	@ManyToOne
-	@JoinColumn(name="flightId")
-	private Flight flight;
-
-	@OneToOne
-	@JoinColumn(name="bookerId", referencedColumnName="userId")
-	private User booker;
-
-	@OneToOne
-	@JoinColumn(name="travelerId", referencedColumnName="userId")
-	private User traveler;
-	
+	/**
+	 * 
+	 */
 	public Booking() {
 	}
 
+	/**
+	 * @param travelerId
+	 * @param flightId
+	 * @param bookerId
+	 * @param active
+	 * @param stripeId
+	 */
 	public Booking(Long travelerId, Long flightId, Long bookerId, Boolean active, String stripeId) {
 		this.travelerId = travelerId;
 		this.flightId = flightId;
@@ -64,28 +71,71 @@ public class Booking implements Serializable {
 		this.stripeId = stripeId;
 	}
 
-	public Boolean getActive() {
+	/**
+	 * @return the traveler
+	 */
+	public User getTraveler() {
+		return traveler;
+	}
+
+	/**
+	 * @return the flight
+	 */
+	public Flight getFlight() {
+		return flight;
+	}
+
+	/**
+	 * @return the booker
+	 */
+	public User getBooker() {
+		return booker;
+	}
+
+	/**
+	 * @return the active
+	 */
+	public Boolean isActive() {
 		return active;
 	}
 
+	/**
+	 * @param active the active to set
+	 */
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
 
+	/**
+	 * @return the travelerId
+	 */
 	public Long getTravelerId() {
 		return travelerId;
 	}
 
+	/**
+	 * @return the flightId
+	 */
 	public Long getFlightId() {
 		return flightId;
 	}
 
+	/**
+	 * @return the bookerId
+	 */
 	public Long getBookerId() {
 		return bookerId;
 	}
 
+	/**
+	 * @return the stripeId
+	 */
 	public String getStripeId() {
 		return stripeId;
+	}
+
+	public void setStripeId(String stripeId) {
+		this.stripeId = stripeId;
 	}
 
 	@Override
@@ -117,10 +167,6 @@ public class Booking implements Serializable {
 		} else if (!travelerId.equals(other.travelerId))
 			return false;
 		return true;
-	}
-
-	public void setStripeId(String stripeId) {
-		this.stripeId = stripeId;
 	}
 
 }

@@ -1,23 +1,24 @@
 package com.ss.training.utopia.agent.entity;
 
 import java.io.Serializable;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 /**
  * @author Trevor Huis in 't Veld
  */
 @Entity
-@Table(name="tbl_airport")
+@Table(name = "tbl_airport")
 public class Airport implements Serializable {
- 
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 3071310522090611039L;
+	private static final long serialVersionUID = -1658156354741238647L;
 
 	@Id
 	@Column
@@ -25,6 +26,28 @@ public class Airport implements Serializable {
 
 	@Column
 	private String name;
+
+	@JsonBackReference
+	@OneToMany(mappedBy = "departAirport")
+	private Set<Flight> flightsFrom;
+
+	@JsonBackReference
+	@OneToMany(mappedBy = "arriveAirport")
+	private Set<Flight> flightsTo;
+
+	/**
+	 * @return the flightsFrom
+	 */
+	public Set<Flight> getFlightsFrom() {
+		return flightsFrom;
+	}
+
+	/**
+	 * @return the flightsTo
+	 */
+	public Set<Flight> getFlightsTo() {
+		return flightsTo;
+	}
 
 	/**
 	 * 
