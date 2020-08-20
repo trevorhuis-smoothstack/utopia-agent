@@ -7,16 +7,20 @@ import java.io.Serializable;
  */
 public class BookingPk implements Serializable {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 6923940602285234654L;
-    
-    private Long travelerId, flightId;
+	private static final long serialVersionUID = 2410657193067811659L;
 
+	private Long travelerId, flightId;
+
+	/**
+	 * 
+	 */
 	public BookingPk() {
 	}
 
+	/**
+	 * @param travelerId
+	 * @param flightId
+	 */
 	public BookingPk(Long travelerId, Long flightId) {
 		this.travelerId = travelerId;
 		this.flightId = flightId;
