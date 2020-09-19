@@ -19,49 +19,51 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "/agent")
 public class AgentBookingController {
-	@Autowired AgentBookingService bookingService;
+	@Autowired
+	AgentBookingService bookingService;
 
-	@Autowired AgentCancelService cancelService;
+	@Autowired
+	AgentCancelService cancelService;
 
-    @PostMapping(path = "/booking")
+	@PostMapping(path = "/booking")
 	public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 
 		String bookingResult = bookingService.createBooking(booking);
 		switch (bookingResult) {
-			case("Card Declined"):
+			case ("Card Declined"):
 				break;
-			case("Flight Full"):
+			case ("Flight Full"):
 				status = HttpStatus.NO_CONTENT;
 				booking = null;
 				return new ResponseEntity<Booking>(booking, status);
-			case("Internal Server Error"):
+			case ("Internal Server Error"):
 				status = HttpStatus.INTERNAL_SERVER_ERROR;
 				break;
-			case("Flight Booked"):
+			case ("Flight Booked"):
 				status = HttpStatus.CREATED;
 				break;
 		}
 
 		return new ResponseEntity<Booking>(booking, status);
-    }
-    
-    @PutMapping(path="/booking")
+	}
+
+	@PutMapping(path = "/booking")
 	public ResponseEntity<Booking> cancelBooking(@RequestBody Booking booking) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 
 		String bookingResult = cancelService.cancelBooking(booking);
 		switch (bookingResult) {
-			case("Already Refunded"):
+			case ("Already Refunded"):
 				break;
-			case("Internal Server Error"):
+			case ("Internal Server Error"):
 				status = HttpStatus.INTERNAL_SERVER_ERROR;
 				break;
-			case("Flight Cancelled"):
+			case ("Flight Cancelled"):
 				status = HttpStatus.OK;
 				break;
 		}
-		
+
 		return new ResponseEntity<Booking>(booking, status);
 	}
 
