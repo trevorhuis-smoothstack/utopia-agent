@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Table(name = "tbl_user")
 public class User implements Serializable {
 
-	private static final long serialVersionUID = 1439160334764663455L;
+	private static final long serialVersionUID = 4242923319861796309L;
 
 	@Id
 	@Column
@@ -31,14 +31,6 @@ public class User implements Serializable {
 
 	@Column
 	private String name, password, role;
-
-	@JsonBackReference
-	@OneToMany(mappedBy = "traveler")
-	private Set<Booking> bookingsFor;
-
-	@JsonBackReference
-	@OneToMany(mappedBy = "booker")
-	private Set<Booking> bookingsBy;
 
 	/**
 	 * 
@@ -59,20 +51,6 @@ public class User implements Serializable {
 		this.name = name;
 		this.password = password;
 		this.role = role;
-	}
-
-	/**
-	 * @return the bookingsFor
-	 */
-	public Set<Booking> getBookingsFor() {
-		return bookingsFor;
-	}
-
-	/**
-	 * @return the bookingsBy
-	 */
-	public Set<Booking> getBookingsBy() {
-		return bookingsBy;
 	}
 
 	/**

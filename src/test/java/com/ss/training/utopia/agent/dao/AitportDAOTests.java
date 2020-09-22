@@ -18,29 +18,30 @@
 // import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 // @RunWith(SpringRunner.class)
-// @SpringBootTest(classes = {AgentApplication.class, 
-// H2TestProfileJPAConfig.class})
+// @SpringBootTest(classes = { AgentApplication.class,
+// H2TestProfileJPAConfig.class })
 // @ActiveProfiles("test")
 // @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 // public class AitportDAOTests {
-    
-//     @Autowired AirportDAO airportDAO;
 
-//     @Test
-//     public void findByAirportIdTest() {
+// @Autowired
+// AirportDAO airportDAO;
 
-//         Airport airportOne = new Airport(1L, "Austin");
-//         Airport airportTwo = new Airport(2L, "Houston");
+// @Test
+// public void findByAirportIdTest() {
 
-//         airportDAO.save(airportOne);
-//         airportDAO.save(airportTwo);
+// Airport airportOne = new Airport(1L, "Austin");
+// Airport airportTwo = new Airport(2L, "Houston");
 
-//         Airport foundAirportOne = airportDAO.findByAirportId(1L);
-//         assertEquals(foundAirportOne, airportOne);
+// airportDAO.save(airportOne);
+// airportDAO.save(airportTwo);
 
-//         Airport foundAirportTwo = airportDAO.findByAirportId(2L);
-//         assertEquals(foundAirportTwo, airportTwo);
+// Airport foundAirportOne = airportDAO.findByAirportId(1L);
+// assertEquals(foundAirportOne, airportOne);
 
-//         assertNull(airportDAO.findByAirportId(3L));
-//     }
+// Airport foundAirportTwo = airportDAO.findByAirportId(2L);
+// assertEquals(foundAirportTwo, airportTwo);
+
+// assertNull(airportDAO.findByAirportId(3L));
+// }
 // }
