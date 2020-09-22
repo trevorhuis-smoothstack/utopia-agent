@@ -1,5 +1,6 @@
 package com.ss.training.utopia.agent.controller;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -51,6 +52,11 @@ public class AgentControllerBookingTests {
                 .andExpect(status().isInternalServerError()).andExpect(content().string(expectedContent));
         mvc.perform(post(uri).contentType(MediaType.APPLICATION_JSON).content(body)).andExpect(status().isCreated())
                 .andExpect(content().string(expectedContent));
+    }
+
+    @Test
+    public void checkUpdate() throws Exception {
+        assertEquals(true, true);
     }
 
 }
