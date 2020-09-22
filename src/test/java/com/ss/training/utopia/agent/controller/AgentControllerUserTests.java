@@ -66,18 +66,18 @@ public class AgentControllerUserTests {
 		mvc.perform(get(uri)).andExpect(status().isInternalServerError()).andExpect(content().string(""));
 	}
 
-	// @Test
-	// public void CreateUserTest() throws Exception {
-	// User newUser = new User(null, "username", "Name", "Password", "TRAVELER"),
-	// createdUser = new User(6l, "username", "Name", "HashedPassword", "TRAVELER");
-	// String uri = "/agent/user", body = mapper.writeValueAsString(newUser),
-	// expectedContent = mapper.writeValueAsString(createdUser);
-	// when(userService.createUser(newUser)).thenReturn(createdUser);
-	// mvc.perform(post(uri).contentType(MediaType.APPLICATION_JSON).content(body)).andExpect(status().isCreated())
-	// .andExpect(content().string(expectedContent));
-	// when(userService.createUser(newUser)).thenThrow(new RuntimeException());
-	// mvc.perform(post(uri).contentType(MediaType.APPLICATION_JSON).content(body))
-	// .andExpect(status().isInternalServerError()).andExpect(content().string(""));
-	// }
+	@Test
+	public void CreateUserTest() throws Exception {
+		User newUser = new User(null, "username", "Name", "Password", "TRAVELER"),
+				createdUser = new User(6l, "username", "Name", "HashedPassword", "TRAVELER");
+		String uri = "/agent/user", body = mapper.writeValueAsString(newUser),
+				expectedContent = mapper.writeValueAsString(createdUser);
+		when(userService.createUser(newUser)).thenReturn(createdUser);
+		mvc.perform(post(uri).contentType(MediaType.APPLICATION_JSON).content(body)).andExpect(status().isCreated())
+				.andExpect(content().string(expectedContent));
+		when(userService.createUser(newUser)).thenThrow(new RuntimeException());
+		mvc.perform(post(uri).contentType(MediaType.APPLICATION_JSON).content(body))
+				.andExpect(status().isInternalServerError()).andExpect(content().string(""));
+	}
 
 }

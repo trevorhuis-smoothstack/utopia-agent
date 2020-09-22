@@ -20,26 +20,11 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @IdClass(BookingPk.class)
 public class Booking implements Serializable {
 
-	private static final long serialVersionUID = -5964334491109305574L;
+	private static final long serialVersionUID = -3688288514632867852L;
 
 	@Id
 	@Column
 	private Long travelerId, flightId;
-
-	@ManyToOne
-	@JoinColumn(name = "travelerId", referencedColumnName = "userId", insertable = false, updatable = false)
-	@JsonManagedReference
-	private User traveler;
-
-	@ManyToOne
-	@JoinColumn(name = "flightId", referencedColumnName = "flightId", insertable = false, updatable = false)
-	@JsonManagedReference
-	private Flight flight;
-
-	@ManyToOne
-	@JoinColumn(name = "bookerId", referencedColumnName = "userId", insertable = false, updatable = false)
-	@JsonManagedReference
-	private User booker;
 
 	@Column
 	private Long bookerId;
@@ -69,27 +54,6 @@ public class Booking implements Serializable {
 		this.bookerId = bookerId;
 		this.active = active;
 		this.stripeId = stripeId;
-	}
-
-	/**
-	 * @return the traveler
-	 */
-	public User getTraveler() {
-		return traveler;
-	}
-
-	/**
-	 * @return the flight
-	 */
-	public Flight getFlight() {
-		return flight;
-	}
-
-	/**
-	 * @return the booker
-	 */
-	public User getBooker() {
-		return booker;
 	}
 
 	/**
